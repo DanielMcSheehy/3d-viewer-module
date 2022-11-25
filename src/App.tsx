@@ -4,6 +4,9 @@ import './App.css'
 import { Authentication, Fleet } from '@formant/data-sdk'
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { FormantColor } from './formantColor';
+import { GroundPlane } from './objects/GroundPlane';
+import { Axes } from './objects/Axes';
 
 function App() {
   const [count, setCount] = useState(0)
@@ -22,16 +25,23 @@ function App() {
   useEffect(() => {
     getDevice();
 
+    const root = new THREE.Object3D();
     const scene = new THREE.Scene();
+    scene.add(root);
+    root.rotateX(-Math.PI / 2);
+
+    scene.background = new THREE.Color(FormantColor.module);
+    scene.add(new THREE.AxesHelper());
+
     const camera = new THREE.PerspectiveCamera(
       50,
       window.innerWidth / window.innerHeight,
       1,
       1000
     );
-    camera.position.z = 50;
-    camera.position.y = 50;
-    camera.position.x = 50;
+    camera.position.z = 2;
+    camera.position.y = 2;
+    camera.position.x = 2;
     
     const canvas = document.getElementById('threejs-canvas') || undefined;
     const renderer = new THREE.WebGL1Renderer({
@@ -42,16 +52,13 @@ function App() {
     document.body.appendChild(renderer.domElement);
 
     const ambientLight = new THREE.AmbientLight('#BAC4E2', 1);
-    scene.background = new THREE.Color('#2d3855');
-    scene.add(new THREE.AxesHelper());
-    scene.add(new THREE.GridHelper(100, 100, '#BAC4E2'));
+
+    root.add(new GroundPlane());
+    root.add(new Axes(false));
+
+    
     scene.add(ambientLight);
 
-    const boxMesh = new THREE.Mesh(
-      new THREE.BoxGeometry(16,16,16),
-      new THREE.MeshNormalMaterial()
-    )
-    scene.add(boxMesh);
 
     const controls = new OrbitControls(camera, renderer.domElement);
 
