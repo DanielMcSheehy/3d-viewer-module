@@ -8,5 +8,6 @@ import './reset.css';
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <App />
+    <canvas id="threejs-canvas" />
   </React.StrictMode>
 )
