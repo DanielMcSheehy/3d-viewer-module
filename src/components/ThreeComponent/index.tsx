@@ -5,6 +5,8 @@ import * as THREE from 'three';
 import Camera from '../Camera'
 import Renderer from '../Renderer'
 import { FormantColor } from '../../formantColor';
+import { GroundPlane } from '../../objects/GroundPlane';
+import { Axes } from '../../objects/Axes';
 
 let instance: null | ThreeComponent = null;
 
@@ -24,6 +26,7 @@ export default class ThreeComponent {
 
     this.canvas = _canvas;
     this.sizes = new Sizes();
+    this.time = new Time();
     this.scene = new THREE.Scene();
     this.camera = new Camera();
     this.renderer = new Renderer();
@@ -38,6 +41,14 @@ export default class ThreeComponent {
     this.time.on('tick', () => {
       this.update()
     })
+
+    const root = new THREE.Object3D();
+    this.scene.add(root);
+    this.scene.add(new THREE.AxesHelper());
+    root.rotateX(-Math.PI / 2);
+
+    root.add(new GroundPlane());
+    root.add(new Axes(false));
   }
 
   resize() {
