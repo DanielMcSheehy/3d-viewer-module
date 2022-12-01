@@ -27,9 +27,11 @@
     "lzfjs": "^1.0.1"
   },
   "devDependencies": {
+    "@types/howler": "^2.2.7",
     "@types/react": "^18.0.24",
     "@types/react-dom": "^18.0.8",
     "@types/three": "^0.146.0",
+    "@types/uuid": "^8.3.4",
     "@vitejs/plugin-react": "^2.2.0",
     "typescript": "^4.6.4",
     "vite": "^3.2.3",
