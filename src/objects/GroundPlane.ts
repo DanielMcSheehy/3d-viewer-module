@@ -7,13 +7,8 @@ import {
   LineBasicMaterial,
   Mesh,
   Path,
-} from "three";
-import { FormantColor } from "../formantColor";
-
-function range(start: number, end: number) {
-  return Array.apply(0, Array(end - 1))
-    .map((e, index) => index + start);
-}
+} from 'three';
+import { range } from '../../common/range';
 
 function polarGridCircle(
   radius: number,
@@ -58,8 +53,8 @@ function polarGrid(majorCircleColor: Color, minorCircleColor: Color) {
 
 export class GroundPlane extends Group {
   constructor(
-    color2: Color = new Color(FormantColor.steel01),
-    color3: Color = new Color(FormantColor.steel01)
+    color2: Color = new Color(0x2d3753),
+    color3: Color = new Color(0x3b4569)
   ) {
     super();
     this.add(polarGrid(color3, color2));
