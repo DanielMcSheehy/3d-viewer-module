@@ -13,6 +13,7 @@ import { DeviceVisualUrdfLayer } from './layers/DeviceVisualUrdfLayer';
 import { DeviceVisualTFLayer } from './layers/DeviceVisualTFLayer';
 import { EmptyLayer } from './layers/EmptyLayer';
 import { ChartLayer } from './layers/ChartLayer';
+import { MapLayer } from './layers/MapLayer';
 
 export * from './components/Universe';
 export * from './layers/LayerRegistry';
@@ -77,3 +78,4 @@ LayerRegistry.register(DeviceVisualTFLayer);
 LayerRegistry.register(VideoLayer);
 LayerRegistry.register(EmptyLayer);
 LayerRegistry.register(ChartLayer);
+LayerRegistry.register(MapLayer);

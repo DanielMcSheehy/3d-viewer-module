@@ -6,8 +6,8 @@ export function createScene() {
     {
       id: uuid.v4(),
       editing: false,
-      type: 'teleport',
-      name: 'Teleport',
+      type: 'map',
+      name: 'Satellite Map',
       deviceContext: 'Abc',
       children: [],
       visible: true,
