@@ -12,13 +12,11 @@ import {
   Raycaster,
   Object3D,
   ACESFilmicToneMapping,
-  LineBasicMaterial,
 } from "three";
 import styled from "styled-components";
 import { RGBELoader } from "../../../three-utils/loaders/RGBELoader";
 import { OrbitControls } from "../../../three-utils/controls/OrbitControls";
 import { TransformControls } from "../../../three-utils/controls/TransformControls";
-import { VRButton } from "../../../three-utils/webxr/VRButton";
 import { defined, definedAndNotNull } from "../../../common/defined";
 import { LayerRegistry } from "../../layers/LayerRegistry";
 import { TransformLayer } from "../../layers/TransformLayer";
@@ -35,9 +33,7 @@ import {
 } from "../../model/SceneGraph";
 import { TreePath, treePathEquals } from "../../model/ITreeElement";
 import { Color } from "../../../common/Color";
-import { XRControllerModelFactory } from "../../../three-utils/webxr/XRControllerModelFactory";
-import { OculusHandModel } from "../../../three-utils/webxr/OculusHandModel";
-import { Hand, HandPose } from "./Hand";
+
 import { Controller } from "./Controller";
 import { HandheldController } from "./HandheldController";
 
@@ -59,15 +55,6 @@ export interface IUniverseViewerProps {
   onSceneGraphElementEdited: (path: TreePath, transform: Vector3) => void;
   vr?: boolean;
 }
-interface HandHeldGamePadState {
-  buttons: number[];
-  axes: number[];
-}
-
-interface GamePadState extends HandHeldGamePadState {
-  handedness: THREE.XRHandedness;
-}
-
 export class UniverseViewer extends Component<IUniverseViewerProps> {
   private element: HTMLElement | null = null;
 
@@ -95,17 +82,7 @@ export class UniverseViewer extends Component<IUniverseViewerProps> {
 
   private pointerDirty = false;
 
-  private isInVR = false;
-
-  private usingHands = false;
-
   private clock = new THREE.Clock();
-
-  handHeldControllerGamePadState: HandHeldGamePadState | undefined;
-
-  vrControllerGamePads: Map<THREE.XRInputSource, GamePadState> = new Map();
-
-  private currentHandPoses: HandPose[] = ["unknown", "unknown"];
 
   constructor(props: IUniverseViewerProps) {
     super(props);
@@ -191,59 +168,6 @@ export class UniverseViewer extends Component<IUniverseViewerProps> {
       this.renderer.setPixelRatio(devicePixelRatio);
       this.renderer.setSize(width, height);
 
-      // create lines coming off controllers
-      const controller1 = this.renderer.xr.getController(0);
-      this.scene.add(controller1);
-
-      const controller2 = this.renderer.xr.getController(1);
-      this.scene.add(controller2);
-
-      const geometry = new THREE.BufferGeometry().setFromPoints([
-        new THREE.Vector3(0, 0, 0),
-        new THREE.Vector3(0, 0, -1),
-      ]);
-
-      const line = new THREE.Line(
-        geometry,
-        new LineBasicMaterial({
-          color: 0xffffff,
-          opacity: 0.5,
-          transparent: true,
-        })
-      );
-      line.name = "line";
-      line.scale.z = 5;
-
-      controller1.add(line.clone());
-      controller2.add(line.clone());
-
-      const controllerModelFactory = new XRControllerModelFactory();
-
-      const controllerGrip1 = this.renderer.xr.getControllerGrip(0);
-      controllerGrip1.add(
-        controllerModelFactory.createControllerModel(controllerGrip1)
-      );
-      this.scene.add(controllerGrip1);
-
-      const hand1 = this.renderer.xr.getHand(0);
-      const handModel1 = new OculusHandModel(hand1) as unknown as Hand;
-      hand1.add(handModel1);
-      this.scene.add(hand1);
-
-      // Hand 2
-      const controllerGrip2 = this.renderer.xr.getControllerGrip(1);
-      controllerGrip2.add(
-        controllerModelFactory.createControllerModel(controllerGrip2)
-      );
-      this.scene.add(controllerGrip2);
-
-      const hand2 = this.renderer.xr.getHand(1);
-      const handModel2 = new OculusHandModel(hand2) as unknown as Hand;
-      hand2.add(handModel2);
-      this.scene.add(hand2);
-
-      const hands = [handModel1, handModel2];
-
       this.orbitControls = new OrbitControls(
         this.camera,
         this.renderer.domElement
@@ -261,206 +185,6 @@ export class UniverseViewer extends Component<IUniverseViewerProps> {
       this.scene.add(this.editControls);
       this.renderer.setAnimationLoop(() => {
         const renderer = defined(this.renderer);
-        if (renderer.xr.isPresenting !== this.isInVR) {
-          this.isInVR = renderer.xr.isPresenting;
-          if (this.isInVR) {
-            if (renderer.xr.setFoveation) renderer.xr.setFoveation(0);
-            this.notifyEnterVR();
-          } else {
-            this.notifyExitVR();
-          }
-        }
-        if (this.isInVR) {
-          const session = renderer.xr.getSession();
-          if (session) {
-            const controllers: Controller[] = [];
-            session.inputSources.forEach((source, i) => {
-              let handedness: THREE.XRHandedness = "none";
-              if (source && source.handedness) {
-                handedness = source.handedness;
-              }
-              if (source.gamepad) {
-                const controller = renderer.xr.getController(i) as Controller;
-                controller.handedness = handedness;
-                controller.pulse = function pulse(
-                  intensity: number,
-                  length: number
-                ) {
-                  const gamepad = source.gamepad as any;
-                  if (
-                    gamepad.hapticActuators &&
-                    gamepad.hapticActuators.length > 0
-                  ) {
-                    gamepad.hapticActuators[0].pulse(intensity, length);
-                  }
-                };
-                controllers.push(controller);
-                const buttons = source.gamepad.buttons.map((b) => b.value);
-                const axes = Array.from(source.gamepad.axes.slice(0));
-                const oldState = this.vrControllerGamePads.get(source);
-                const newState = {
-                  handedness,
-                  buttons,
-                  axes,
-                };
-                const raycaster = new Raycaster();
-
-                const controllerTempMatrix = new THREE.Matrix4();
-                controllerTempMatrix
-                  .identity()
-                  .extractRotation(controller.matrixWorld);
-
-                raycaster.ray.origin.setFromMatrixPosition(
-                  controller.matrixWorld
-                );
-                raycaster.ray.direction
-                  .set(0, 0, -1)
-                  .applyMatrix4(controllerTempMatrix);
-                controller.raycaster = raycaster;
-
-                if (oldState) {
-                  for (let p = 0; p < newState.buttons.length; p += 1) {
-                    if (newState.buttons[p] !== oldState.buttons[p]) {
-                      this.notifyControllerButtonChanged(
-                        controller as Controller,
-                        p,
-                        newState.buttons[p]
-                      );
-                    }
-                  }
-
-                  for (let p = 0; p < newState.axes.length; p += 1) {
-                    if (newState.axes[p] !== oldState.axes[p]) {
-                      this.notifyControllerAxisChanged(
-                        controller as Controller,
-                        p,
-                        newState.axes[p]
-                      );
-                    }
-                  }
-                }
-                this.vrControllerGamePads.set(source, newState);
-              }
-            });
-            if (controllers.length > 0) {
-              this.notifyControllers(controllers);
-            }
-            if (hands.length > 0) {
-              const updateHandRaycasters = () => {
-                if (!hands[0].raycaster) {
-                  hands[0].raycaster = new Raycaster();
-                }
-                if (!hands[1].raycaster) {
-                  hands[1].raycaster = new Raycaster();
-                }
-
-                // give hands their independent raycasters
-                let controllerTempMatrix = new THREE.Matrix4();
-                controllerTempMatrix
-                  .identity()
-                  .extractRotation(controller1.matrixWorld);
-                hands[0].raycaster.ray.origin.setFromMatrixPosition(
-                  controller1.matrixWorld
-                );
-                hands[0].raycaster.ray.direction
-                  .set(0, 0, -1)
-                  .applyMatrix4(controllerTempMatrix);
-
-                controllerTempMatrix = new THREE.Matrix4();
-                controllerTempMatrix
-                  .identity()
-                  .extractRotation(controller2.matrixWorld);
-                hands[1].raycaster.ray.origin.setFromMatrixPosition(
-                  controller2.matrixWorld
-                );
-                hands[1].raycaster.ray.direction
-                  .set(0, 0, -1)
-                  .applyMatrix4(controllerTempMatrix);
-              };
-              if (
-                hands[0].controller.visible === true &&
-                hands[1].controller.visible === true &&
-                this.usingHands === false
-              ) {
-                updateHandRaycasters();
-                this.notifyHandsEnter(hands);
-                this.usingHands = true;
-              }
-              if (
-                hands[0].controller.visible !== true &&
-                hands[1].controller.visible !== true &&
-                this.usingHands === true
-              ) {
-                updateHandRaycasters();
-                this.notifyHandsLeave(hands);
-                this.usingHands = false;
-                this.currentHandPoses = ["unknown", "unknown"];
-                this.notifyHandPosesChanged(hands);
-              }
-              if (this.usingHands) {
-                updateHandRaycasters();
-                this.notifyHandsMoved(hands);
-              }
-              const hand1Pose = hands[0].getHandPose();
-              const hand2Pose = hands[1].getHandPose();
-              if (
-                this.currentHandPoses[0] !== hand1Pose ||
-                this.currentHandPoses[1] !== hand2Pose
-              ) {
-                this.currentHandPoses = [hand1Pose, hand2Pose];
-                this.notifyHandPosesChanged(hands);
-              }
-            }
-          }
-        } else {
-          const gamepad = navigator.getGamepads()[0];
-          if (gamepad) {
-            const buttons = gamepad.buttons.map((b) => b.value);
-            const axes = Array.from(gamepad.axes.slice(0));
-            const oldState = this.handHeldControllerGamePadState;
-            const newState = {
-              buttons,
-              axes,
-            };
-            const handHeld = {
-              gamepad,
-              vibrate(params: {
-                startDelay: number;
-                duration: number;
-                weakMagnitude: number;
-                strongMagnitude: number;
-              }) {
-                // @ts-ignore-next-line
-                const actuator = gamepad.vibrationActuator as any;
-                if (actuator) {
-                  actuator.playEffect(actuator.type, params);
-                }
-              },
-            };
-            if (oldState) {
-              for (let p = 0; p < newState.buttons.length; p += 1) {
-                if (newState.buttons[p] !== oldState.buttons[p]) {
-                  this.notifyHandheldControllerButtonChanged(
-                    handHeld as HandheldController,
-                    p,
-                    newState.buttons[p]
-                  );
-                }
-              }
-
-              for (let p = 0; p < newState.axes.length; p += 1) {
-                if (newState.axes[p] !== oldState.axes[p]) {
-                  this.notifyHandheldControllerAxisChanged(
-                    handHeld as HandheldController,
-                    p,
-                    newState.axes[p]
-                  );
-                }
-              }
-            }
-            this.handHeldControllerGamePadState = newState;
-          }
-        }
 
         this.raycaster.setFromCamera(this.pointer, this.camera);
         if (this.pointerDirty) {
@@ -485,7 +209,6 @@ export class UniverseViewer extends Component<IUniverseViewerProps> {
         up = up.applyQuaternion(this.camera.quaternion);
         Howler.orientation(lookAt.x, lookAt.y, lookAt.z, up.x, up.y, up.z);
       });
-      if (vr) element.appendChild(VRButton.createButton(this.renderer));
     }
   }
 
@@ -585,91 +308,9 @@ export class UniverseViewer extends Component<IUniverseViewerProps> {
     this.renderer?.setSize(width, height);
   };
 
-  private notifyHandsEnter(hands: Hand[]) {
-    Array.from(this.pathToLayer.values()).forEach((_) => {
-      defined(_.contentNode).onHandsEnter(hands);
-    });
-  }
-
-  private notifyHandsLeave(hands: Hand[]) {
-    Array.from(this.pathToLayer.values()).forEach((_) => {
-      defined(_.contentNode).onHandsLeave(hands);
-    });
-  }
-
   private notifyRaycasterChanged() {
     Array.from(this.pathToLayer.values()).forEach((_) => {
       defined(_.contentNode).onPointerMove(this.raycaster);
-    });
-  }
-
-  private notifyControllerButtonChanged(
-    controller: Controller,
-    button: number,
-    value: number
-  ) {
-    Array.from(this.pathToLayer.values()).forEach((_) => {
-      defined(_.contentNode).onControllerButtonChanged(
-        controller,
-        button,
-        value
-      );
-    });
-  }
-
-  private notifyControllerAxisChanged(
-    controller: Controller,
-    axis: number,
-    value: number
-  ) {
-    Array.from(this.pathToLayer.values()).forEach((_) => {
-      defined(_.contentNode).onControllerAxisChanged(controller, axis, value);
-    });
-  }
-
-  private notifyHandheldControllerButtonChanged(
-    controller: HandheldController,
-    button: number,
-    value: number
-  ) {
-    Array.from(this.pathToLayer.values()).forEach((_) => {
-      defined(_.contentNode).onHandheldControllerButtonChanged(
-        controller,
-        button,
-        value
-      );
-    });
-  }
-
-  private notifyHandheldControllerAxisChanged(
-    controller: HandheldController,
-    axis: number,
-    value: number
-  ) {
-    Array.from(this.pathToLayer.values()).forEach((_) => {
-      defined(_.contentNode).onHandheldControllerAxisChanged(
-        controller,
-        axis,
-        value
-      );
-    });
-  }
-
-  private notifyControllers(controllers: Controller[]) {
-    Array.from(this.pathToLayer.values()).forEach((_) => {
-      defined(_.contentNode).onControllersMoved(controllers);
-    });
-  }
-
-  private notifyHandsMoved(hands: Hand[]) {
-    Array.from(this.pathToLayer.values()).forEach((_) => {
-      defined(_.contentNode).onHandsMoved(hands);
-    });
-  }
-
-  private notifyHandPosesChanged(hands: Hand[]) {
-    Array.from(this.pathToLayer.values()).forEach((_) => {
-      defined(_.contentNode).onHandPosesChanged(hands);
     });
   }
 
@@ -679,27 +320,6 @@ export class UniverseViewer extends Component<IUniverseViewerProps> {
     });
   }
 
-  private notifyEnterVR() {
-    const { xr } = defined(this.renderer);
-    this.scene.add(xr.getController(0));
-    this.scene.add(xr.getControllerGrip(0));
-    this.scene.add(xr.getController(1));
-    this.scene.add(xr.getControllerGrip(1));
-    Array.from(this.pathToLayer.values()).forEach((_) => {
-      defined(_.contentNode).onEnterVR(xr);
-    });
-  }
-
-  private notifyExitVR() {
-    const { xr } = defined(this.renderer);
-    this.scene.remove(xr.getController(0));
-    this.scene.remove(xr.getControllerGrip(0));
-    this.scene.remove(xr.getController(1));
-    this.scene.remove(xr.getControllerGrip(1));
-    Array.from(this.pathToLayer.values()).forEach((_) => {
-      defined(_.contentNode).onExitVR(xr);
-    });
-  }
 
   public removeSceneGraphItem(sceneGraph: SceneGraph, path: TreePath) {
     if (this.attachedPath && treePathEquals(path, this.attachedPath)) {

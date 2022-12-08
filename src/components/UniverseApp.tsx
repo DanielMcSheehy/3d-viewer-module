@@ -626,11 +626,6 @@ export function UniverseApp(props: IUniverseAppProps) {
           description: "click to toggle visibility",
         },
         {
-          icon: "edit",
-          description: "edit",
-          color: element.editing ? "#18d2ff" : "white",
-        },
-        {
           icon: "help",
           description: LayerRegistry.getDescription(element.type),
         },
@@ -691,8 +686,8 @@ export function UniverseApp(props: IUniverseAppProps) {
       <UniverseSnackbar />
       <UniverseContainer>
         <Box
-          display={showSidebar ? "grid" : "block"}
-          gridTemplateColumns={showSidebar ? "370px 1fr" : undefined}
+          display="block"
+          // gridTemplateColumns={showSidebar ? "370px 1fr" : undefined}
           sx={{ height: "100%" }}
         >
           {showSidebar && (

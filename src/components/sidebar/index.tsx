@@ -10,11 +10,12 @@ import { SortableTree } from "../SortableTree";
 
 const SidebarContainer = styled.div`
   background-color: #2d3855;
+  position: absolute;
+  z-index: 1;
+  left: 0;
   padding: 1rem;
   display: grid;
-  grid-template-rows: 25rem auto 3rem;
   gap: 1rem;
-  height: 100%;
 `;
 
 const PropertiesSectionDiv = styled.div`
@@ -24,6 +25,7 @@ const PropertiesSectionDiv = styled.div`
 
 const ButtonsDiv = styled.div`
   display: flex;
+  position: absolute;
   flex-direction: row;
   align-items: center;
   justify-content: center;
@@ -99,35 +101,6 @@ export function UniverseSidebar({
         />
       </TreeArea>
       <PropertiesSectionDiv>{children}</PropertiesSectionDiv>
-      <ButtonsDiv>
-        <Button variant="contained" size="small" onClick={onAddClicked}>
-          Add
-        </Button>
-        <Button
-          variant="contained"
-          size="small"
-          disabled={selected === undefined || selected.length <= 1}
-          onClick={onRemoveClicked}
-        >
-          Remove
-        </Button>
-        <Button
-          variant="contained"
-          size="small"
-          disabled={selected === undefined || selected.length <= 1}
-          onClick={onDuplicateClicked}
-        >
-          Duplicate
-        </Button>
-        <Button
-          variant="contained"
-          size="small"
-          disabled={selected === undefined || selected.length <= 1}
-          onClick={onRenameClicked}
-        >
-          Rename
-        </Button>
-      </ButtonsDiv>
     </SidebarContainer>
   );
 }
