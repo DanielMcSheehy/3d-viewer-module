@@ -1,16 +1,17 @@
-import {
-  CanvasTexture,
-  Group,
-  Material,
-  Mesh,
-  MeshBasicMaterial,
-  Object3D,
-  PlaneGeometry,
-} from 'three';
+import { Mesh, MeshBasicMaterial, PlaneGeometry, Texture } from 'three';
 import * as uuid from 'uuid';
-import { IUniverseData } from '@formant/universe-core';
+import { defined, UniverseDataSource } from '@formant/universe-core';
 import { UniverseLayer } from './UniverseLayer';
-import { LayerSuggestion } from './LayerRegistry';
+import { ILocation } from '../main';
+
+const mapBoxConfig = {
+  username: 'mapbox',
+  styleId: 'satellite-v9',
+  width: 500,
+  height: 500,
+  bearing: 0,
+  accessToken: 'shhh',
+};
 
 export class MapLayer extends UniverseLayer {
   static layerTypeId = 'map';
@@ -21,69 +22,72 @@ export class MapLayer extends UniverseLayer {
 
   static usesData = true;
 
-  static async getLayerSuggestions(
-    universeData: IUniverseData,
-    deviceContext?: string
-  ): Promise<LayerSuggestion[]> {
-    const dataLayers: LayerSuggestion[] = [];
-    if (deviceContext) {
-      (await universeData.getHardwareStreams(deviceContext)).forEach(
-        (stream) => {
-          if (stream.rtcStreamType === 'h264-video-frame') {
-            dataLayers.push({
-              sources: [
-                {
-                  id: uuid.v4(),
-                  sourceType: 'hardware',
-                  rtcStreamName: stream.name,
-                },
-              ],
-              layerType: MapLayer.layerTypeId,
-            });
-          }
-        }
-      );
-    }
-    return dataLayers;
-  }
-
   loaded: boolean = false;
 
-  ctx?: CanvasRenderingContext2D;
-
-  texture?: CanvasTexture;
+  texture?: Texture;
 
   mesh?: Mesh;
 
-  group?: Group;
+  location?: ILocation;
+
+  zoomLevel: number = 15;
 
   init() {
-    // const dataSource = defined(this.layerDataSources)[0];
-    // defined(this.universeData).subscribeToVideo(
-    //   defined(this.getLayerContext()).deviceId,
-    //   defined(dataSource),
-    //   (d) => {
-    //     if (typeof d === 'symbol') {
-    //       throw new Error('unhandled data status');
-    //     }
-    //     this.onData(d as HTMLCanvasElement);
-    //   }
-    // );
-    this.onData();
-  }
-
-  onLayerPartsRequested(): {
-    [key in string]: Material | Mesh | Group | Object3D | undefined;
-  } {
-    return {};
+    const source: UniverseDataSource = {
+      id: uuid.v4(),
+      sourceType: 'telemetry',
+      streamName: 'location?',
+      streamType: 'location',
+    };
+    this.universeData.subscribeToLocation(
+      defined(this.getLayerContext()?.deviceId),
+      source,
+      (newLoc: ILocation | Symbol) => {
+        if (typeof newLoc === 'symbol') {
+          throw new Error('unhandled data status');
+        } else if (!this.location && 'latitude' in newLoc) {
+          this.location = newLoc;
+          this.onData();
+        }
+      }
+    );
   }
 
   onData = () => {
-    const material = new MeshBasicMaterial({});
-    const geometry = new PlaneGeometry(1, 1);
+    const { username, styleId, width, height, bearing, accessToken } =
+      mapBoxConfig;
+
+    this.texture = new Texture();
+
+    const mapImageUrl = `https://api.mapbox.com/styles/v1/${username}/${styleId}/static/${this.location?.longitude.toFixed(
+      4
+    )},${this.location?.latitude.toFixed(4)},${
+      this.zoomLevel
+    },${bearing}/${width}x${height}@2x?access_token=${accessToken}`;
+    fetch(mapImageUrl)
+      .then((response) => response.blob())
+      .then((blob) => {
+        const img = new Image();
+
+        img.src = URL.createObjectURL(blob);
+
+        img.onload = () => {
+          if (this.texture) {
+            this.texture.image = img;
+            URL.revokeObjectURL(img.src);
+            this.texture.needsUpdate = true;
+          } else {
+            throw new Error('error initializing texture');
+          }
+        };
+      });
+
+    const material = new MeshBasicMaterial({
+      map: this.texture,
+    });
+    const geometry = new PlaneGeometry(5, 5, 100, 100);
     this.mesh = new Mesh(geometry, material);
 
     this.add(this.mesh);
-    this.mesh.scale.set(10, 10, 0);
   };
 }

@@ -8,11 +8,20 @@ export function createScene() {
       editing: false,
       type: 'map',
       name: 'Satellite Map',
-      deviceContext: 'Abc',
+      deviceContext: 'asdfadsfas',
       children: [],
       visible: true,
       position: { type: 'manual', x: 0, y: 0, z: 0 },
-      fieldValues: {},
+      fieldValues: {
+        // latitude: {
+        //   type: 'number',
+        //   value: 31.0119,
+        // },
+        // longitude: {
+        //   type: 'number',
+        //   value: -92.5499,
+        // },
+      },
       data: {},
       dataSources: [],
     },

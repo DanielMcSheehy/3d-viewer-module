@@ -34,9 +34,6 @@ import {
 import { TreePath, treePathEquals } from "../../model/ITreeElement";
 import { Color } from "../../../common/Color";
 
-import { Controller } from "./Controller";
-import { HandheldController } from "./HandheldController";
-
 const MeasureContainer = styled.div`
   width: 100%;
   height: 100vh;
@@ -53,7 +50,6 @@ const MeasureContainer = styled.div`
 export interface IUniverseViewerProps {
   universeData: IUniverseData;
   onSceneGraphElementEdited: (path: TreePath, transform: Vector3) => void;
-  vr?: boolean;
 }
 export class UniverseViewer extends Component<IUniverseViewerProps> {
   private element: HTMLElement | null = null;
@@ -142,7 +138,6 @@ export class UniverseViewer extends Component<IUniverseViewerProps> {
 
   public componentDidMount() {
     const { element } = this;
-    const { vr } = this.props;
     if (element) {
       this.renderer = new WebGLRenderer({
         alpha: true,
