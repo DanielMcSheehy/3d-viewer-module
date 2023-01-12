@@ -20,27 +20,44 @@ LayerRegistry.register(TestLayer);
 
 
 function ViewerApp() {
-  const [config, setConfig] = React.useState(null);
+  const [config, setConfig] = React.useState(configTest);
+  const [authToken, setAuthToken] = React.useState('');
+  const data = new LiveUniverseData();
+
   React.useEffect(() => {
     const getDevice = async () => {
-      await Authentication.waitTilAuthenticated();
-      console.log(Authentication.token)
-      const moduleConfiguration = JSON.parse(defined(await App.getCurrentModuleConfiguration()));
+      await Authentication.waitTilAuthenticated().finally(
+        () => {
+          console.log(Authentication.token)
+          setAuthToken(defined(Authentication.token));
+        }
+      );
+      const device = await Fleet.getCurrentDevice();
+      console.log(device);
+      console.log(device.getConfiguration());
 
-      setConfig(moduleConfiguration);
-      console.log(moduleConfiguration)
+      console.log(await device.getTelemetry('base_station.location', new Date(Date.now() - 2000), new Date()));
+      console.log(await device.getTelemetry('eko.localization.odom', new Date(Date.now() - 2000), new Date()));
+
+
+      // const moduleConfiguration = JSON.parse(defined(await App.getCurrentModuleConfiguration()));
+
+      // setConfig(moduleConfiguration);
+      setConfig(configTest);
+      // console.log(moduleConfiguration)
     };
     getDevice();
   }, [])
-  const data =
-    demo === "true" ? new SimulatedUniverseData(config) : new LiveUniverseData();
+  // const data =
+  //    demo === "true" ? new SimulatedUniverseData(config) : new LiveUniverseData();
+
   window.setInterval(() => {
     data.setTime(new Date());
   }, 60 / 12);
 
   return (
 
-    config ? (<Universe
+    authToken ? (<Universe
       initialSceneGraph={createScene(config)}
       universeData={data}
       mode="edit"

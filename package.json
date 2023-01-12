@@ -9,9 +9,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@formant/data-sdk": "0.0.105",
+    "@formant/data-sdk": "0.0.111",
     "@formant/ui-sdk": "0.0.26",
-    "@formant/universe-connector": "^0.0.5",
+    "@formant/universe-connector": "^0.0.7",
     "@formant/universe-core": "^0.0.9",
     "@types/seedrandom": "^3.0.2",
     "geolib": "^3.3.3",

@@ -34,7 +34,14 @@ function createSatelliteLayer(
       },
     },
     data: {},
-    dataSources: [],
+    dataSources: [
+      {
+        id: uuid.v4(),
+        sourceType: 'telemetry',
+        streamName: 'base_station.location',
+        streamType: 'location',
+      },
+    ],
   };
 }
 
@@ -134,7 +141,7 @@ export function createScene(configuration: any) {
       configuration.longitude,
       configuration.size
     ),
-    ...devices,
+    // ...devices,
 
     // createFarmbot('Farmbot 2', FARM_BOT_2_DEVICE_ID),
     // createFarmbot('Farmbot 3', FARM_BOT_3_DEVICE_ID),

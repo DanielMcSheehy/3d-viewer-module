@@ -167,7 +167,7 @@ export class UniverseViewer extends Component<IUniverseViewerProps> {
         this.camera,
         this.renderer.domElement
       );
-      this.orbitControls.maxDistance = 50;
+      // this.orbitControls.maxDistance = null;
       this.orbitControls.update();
       this.editControls = new TransformControls(
         this.camera,

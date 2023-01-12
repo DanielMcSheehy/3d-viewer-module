@@ -1,13 +1,14 @@
 import { Mesh, MeshBasicMaterial, PlaneGeometry, Texture } from 'three';
 import { computeDestinationPoint } from 'geolib';
 import { GeolibGeoJSONPoint } from 'geolib/es/types';
+import { Fleet } from '@formant/data-sdk';
 import { UniverseLayer } from './UniverseLayer';
 
 const mapBoxConfig = {
   username: 'mapbox',
   styleId: 'satellite-v9',
-  width: 1000,
-  height: 1000,
+  width: 1200,
+  height: 1200,
   bearing: 0,
   accessToken:
     'mapboxAPIToken',
@@ -30,7 +31,7 @@ export class MapLayer extends UniverseLayer {
 
   location: GeolibGeoJSONPoint = [0, 0];
 
-  distance: number = 50;
+  distance: number = 300;
 
   static fields = {
     latitude: {
@@ -59,12 +60,22 @@ export class MapLayer extends UniverseLayer {
     },
   };
 
-  init() {
-    this.location = [
-      this.getField(MapLayer.fields.longitude) || 0,
-      this.getField(MapLayer.fields.latitude) || 0,
-    ];
-    this.distance = (this.getField(MapLayer.fields.size) || 0) / 2;
+  async init() {
+    const device = await Fleet.getCurrentDevice();
+    await device
+      .getTelemetry(
+        'base_station.location',
+        new Date(Date.now() - 2000),
+        new Date()
+      )
+      .then((results) => {
+        this.location = [
+          Number(results[0].points[0][1].longitude),
+          Number(results[0].points[0][1].latitude),
+        ];
+      });
+    // this.distance = (this.getField(MapLayer.fields.size) || 0) / 2;
+    // await Authentication.waitTilAuthenticated();
 
     this.onData();
   }
@@ -73,6 +84,14 @@ export class MapLayer extends UniverseLayer {
     const { username, styleId, width, height, accessToken } = mapBoxConfig;
 
     this.texture = new Texture();
+
+    const zoom = 17;
+    const mapSize = 50;
+    const numImagesX = 3;
+    const numImagesY = 3;
+    const degreesPerMeter = 360 / (2 * Math.PI * 6378137);
+    const imageSizeX = mapSize * degreesPerMeter;
+    const imageSizeY = mapSize * degreesPerMeter;
 
     // calculate bounding box, given center and distance
     const bearings = {
@@ -107,7 +126,7 @@ export class MapLayer extends UniverseLayer {
       EARTH_RADIUS_IN_METERS
     ).longitude.toFixed(8);
 
-    const mapImageUrl = `https://api.mapbox.com/styles/v1/${username}/${styleId}/static/[${minLongitude},${minLatitude},${maxLongitude},${maxLatitude}]/${width}x${height}?logo=false&access_token=${accessToken}`;
+    const mapImageUrl = `https://api.mapbox.com/styles/v1/${username}/${styleId}/static/[${minLongitude},${minLatitude},${maxLongitude},${maxLatitude}]/${width}x${height}@2x?logo=false&access_token=${accessToken}`;
     fetch(mapImageUrl)
       .then((response) => response.blob())
       .then((blob) => {
@@ -139,5 +158,65 @@ export class MapLayer extends UniverseLayer {
     this.mesh.position.z = -0.001;
 
     this.add(this.mesh);
+
+    // const surroundingMeshes = [];
+
+    // for (let i = -1; i <= 1; i += 1) {
+    //   for (let j = -1; j <= 1; j += 1) {
+    //     // Don't add a plane if it's the center one
+    //     // eslint-disable-next-line no-continue
+    //     if (i === 0 && j === 0) continue;
+
+    //     const surroundingMaterial = new MeshBasicMaterial({
+    //       map: null,
+    //     });
+    //     const surroundingGeometry = new PlaneGeometry(
+    //       this.distance * 2,
+    //       this.distance * 2,
+    //       100,
+    //       100
+    //     );
+    //     const surroundingMesh = new Mesh(
+    //       surroundingGeometry,
+    //       surroundingMaterial
+    //     );
+    //     surroundingMesh.position.x = i * this.distance * 2;
+    //     surroundingMesh.position.y = j * this.distance * 2;
+    //     surroundingMesh.position.z = -0.001;
+
+    //     surroundingMeshes.push(surroundingMesh);
+    //   }
+    // }
+
+    // console.log(surroundingMeshes);
+    // for (let i = 0; i < numImagesX; i += 1) {
+    //   for (let j = 0; j < numImagesY; j += 1) {
+    //     // Calculate the latitude and longitude of the center of this image
+    //     const imageLat = (Number(this.location[1]) + j * imageSizeY).toFixed(4);
+    //     const imageLng = (Number(this.location[0]) + i * imageSizeX).toFixed(4);
+
+    //     const mapImageUrl2 = `https://api.mapbox.com/styles/v1/mapbox/satellite-v9/static/${imageLng},${imageLat},19/${width}x${height}?access_token=${accessToken}`;
+
+    //     fetch(mapImageUrl2)
+    //       .then((response) => response.blob())
+    //       .then((blob) => {
+    //         const gridTexture = new Texture();
+    //         const mapImage = new Image();
+    //         mapImage.src = URL.createObjectURL(blob);
+    //         mapImage.onload = () => {
+    //           gridTexture.image = mapImage;
+    //           gridTexture.needsUpdate = true;
+    //           const planeIndex = i + j * numImagesX;
+    //           if (surroundingMeshes[planeIndex]) {
+    //             surroundingMeshes[planeIndex].material.map = gridTexture;
+    //             // surroundingMeshes[planeIndex].material.needsUpdate = true;
+    //             console.log(surroundingMeshes[planeIndex]);
+    //             this.add(surroundingMeshes[planeIndex]);
+    //           }
+    //         };
+    //       })
+    //       .catch(console.error);
+    //   }
+    // }
   };
 }
