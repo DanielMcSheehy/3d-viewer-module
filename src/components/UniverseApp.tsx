@@ -85,29 +85,6 @@ const ControlGroup = styled.div`
     }
 `;
 
-const Control = styled.div`
-  > svg {
-    width: 1rem;
-    height: 1rem;
-    color: white;
-  }
-  background: #bac4e2;
-  opacity: 0.5;
-  margin-bottom: 0.5rem;
-  border-radius: 1rem;
-  padding: 0;
-  height: 2rem;
-  width: 2rem;
-  display: grid;
-  place-items: center;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-
-  &:hover {
-    opacity: 1;
-  }
-`;
-
 const UniverseContainer = styled.div`
   height: 100%;
 `;
@@ -326,20 +303,20 @@ export function UniverseApp(props: IUniverseAppProps) {
     setUpdatingSceneGraph(true);
   };
 
-  const showAddDialog = (cp: TreePath) => {
-    setShowingAddDialog(true);
-    setCurrentPath(cp);
-  };
+  // const showAddDialog = (cp: TreePath) => {
+  //   setShowingAddDialog(true);
+  //   setCurrentPath(cp);
+  // };
 
-  const showRenameDialog = (cp: TreePath) => {
-    if (cp.length > 0) {
-      setShowingRenameDialog(true);
-      setCurrentPath(cp);
-      setCurrentlyEditingName(
-        definedAndNotNull(findSceneGraphElement(sceneGraph, cp)).name
-      );
-    }
-  };
+  // const showRenameDialog = (cp: TreePath) => {
+  //   if (cp.length > 0) {
+  //     setShowingRenameDialog(true);
+  //     setCurrentPath(cp);
+  //     setCurrentlyEditingName(
+  //       definedAndNotNull(findSceneGraphElement(sceneGraph, cp)).name
+  //     );
+  //   }
+  // };
 
   const hideRenameDialog = () => {
     setShowingRenameDialog(false);
@@ -361,80 +338,80 @@ export function UniverseApp(props: IUniverseAppProps) {
     );
   };
 
-  const onRemoveItem = (path: TreePath) => {
-    if (!viewer) {
-      return;
-    }
+  // const onRemoveItem = (path: TreePath) => {
+  //   if (!viewer) {
+  //     return;
+  //   }
 
-    const e = definedAndNotNull(findSceneGraphElement(sceneGraph, path));
-    visitSceneGraphElementReverse(
-      e,
-      (_, epath) => {
-        if (
-          currentlyEditingElement &&
-          treePathEquals(currentlyEditingElement, epath)
-        ) {
-          defined(viewer).toggleEditing(
-            sceneGraph,
-            currentlyEditingElement,
-            false
-          );
-          setCurrentlyEditingElement(undefined);
-        }
-        defined(viewer).removeSceneGraphItem(sceneGraph, epath);
-      },
-      path
-    );
-    const newSceneGraph = produce(sceneGraph, (draft) => {
-      const sgParent = getSceneGraphElementParent(draft, path);
-      if (sgParent) {
-        sgParent.children.splice(path[path.length - 1], 1);
-      } else {
-        draft.splice(path[path.length - 1], 1);
-      }
-    });
-    setSceneGraph(newSceneGraph);
-    persist();
-  };
+  //   const e = definedAndNotNull(findSceneGraphElement(sceneGraph, path));
+  //   visitSceneGraphElementReverse(
+  //     e,
+  //     (_, epath) => {
+  //       if (
+  //         currentlyEditingElement &&
+  //         treePathEquals(currentlyEditingElement, epath)
+  //       ) {
+  //         defined(viewer).toggleEditing(
+  //           sceneGraph,
+  //           currentlyEditingElement,
+  //           false
+  //         );
+  //         setCurrentlyEditingElement(undefined);
+  //       }
+  //       defined(viewer).removeSceneGraphItem(sceneGraph, epath);
+  //     },
+  //     path
+  //   );
+  //   const newSceneGraph = produce(sceneGraph, (draft) => {
+  //     const sgParent = getSceneGraphElementParent(draft, path);
+  //     if (sgParent) {
+  //       sgParent.children.splice(path[path.length - 1], 1);
+  //     } else {
+  //       draft.splice(path[path.length - 1], 1);
+  //     }
+  //   });
+  //   setSceneGraph(newSceneGraph);
+  //   persist();
+  // };
 
-  const onDuplicateItem = (path: TreePath) => {
-    if (!viewer) {
-      return;
-    }
+  // const onDuplicateItem = (path: TreePath) => {
+  //   if (!viewer) {
+  //     return;
+  //   }
 
-    const newSceneGraph = produce(sceneGraph, (draft) => {
-      const sgParent = getSceneGraphElementParent(draft, path);
-      if (sgParent) {
-        const newEl = cloneSceneGraph(
-          defined(sgParent.children[path[path.length - 1]])
-        );
-        sgParent.children.push(newEl);
-        path.pop();
-        const newPath = [...path, sgParent.children.length - 1];
-        visitSceneGraphElement(
-          newEl,
-          (_, epath) => {
-            defined(viewer).addSceneGraphItem(draft, epath);
-          },
-          newPath
-        );
-      } else {
-        const newEl = cloneSceneGraph(defined(draft[path[path.length - 1]]));
-        draft.push(newEl);
-        path.pop();
-        const newPath = [...path, draft.length - 1];
-        visitSceneGraphElement(
-          newEl,
-          (_, epath) => {
-            defined(viewer).addSceneGraphItem(draft, epath);
-          },
-          newPath
-        );
-      }
-    });
-    setSceneGraph(newSceneGraph);
-    persist();
-  };
+  //   const newSceneGraph = produce(sceneGraph, (draft) => {
+  //     const sgParent = getSceneGraphElementParent(draft, path);
+  //     if (sgParent) {
+  //       const newEl = cloneSceneGraph(
+  //         defined(sgParent.children[path[path.length - 1]])
+  //       );
+  //       sgParent.children.push(newEl);
+  //       path.pop();
+  //       const newPath = [...path, sgParent.children.length - 1];
+  //       visitSceneGraphElement(
+  //         newEl,
+  //         (_, epath) => {
+  //           defined(viewer).addSceneGraphItem(draft, epath);
+  //         },
+  //         newPath
+  //       );
+  //     } else {
+  //       const newEl = cloneSceneGraph(defined(draft[path[path.length - 1]]));
+  //       draft.push(newEl);
+  //       path.pop();
+  //       const newPath = [...path, draft.length - 1];
+  //       visitSceneGraphElement(
+  //         newEl,
+  //         (_, epath) => {
+  //           defined(viewer).addSceneGraphItem(draft, epath);
+  //         },
+  //         newPath
+  //       );
+  //     }
+  //   });
+  //   setSceneGraph(newSceneGraph);
+  //   persist();
+  // };
 
   const onRenameLayer = (name: string) => {
     hideRenameDialog();
