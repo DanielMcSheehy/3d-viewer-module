@@ -5,8 +5,11 @@
     "baseStationLocationStream": {
       "type": "string"
     },
-    "size": {
+    "mapSize": {
       "type": "number"
+    },
+    "mapVisibility": {
+      "type": "boolean"
     },
     "devices": {
       "type": "array",
@@ -21,6 +24,9 @@
           },
           "odometryStream": {
             "type": "string"
+          },
+          "deviceVisibility": {
+            "type": "boolean"
           }
         },
         "required": ["deviceId", "odometryStream"]
