@@ -20,7 +20,6 @@ export * from './components/Universe';
 export * from './layers/LayerRegistry';
 export * from './layers/UniverseLayer';
 export * from './layers/TransformLayer';
-export * from './layers/TeleportLayer';
 export * from './components/sidebar';
 export * from './model/SceneGraph';
 export * from './objects/Label';

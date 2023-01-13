@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "target": "ESNext",
+    "skipLibCheck": true,
     "useDefineForClassFields": true,
     "module": "ESNext",
     "jsx": "react",
@@ -11,8 +12,8 @@
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "noEmit": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
+    //"noUnusedLocals": true,
+    //"noUnusedParameters": true,
     "noImplicitReturns": true
   },
   "include": ["src"],

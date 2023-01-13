@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Icon, Tooltip, Typography } from "@formant/ui-sdk";
+import { Icon, Typography } from "@formant/ui-sdk";
 import styled from "styled-components";
 import { TreeElement, TreePath } from "../model/ITreeElement";
 import { LayerIcon, TextIcon } from "./icons";
@@ -85,14 +85,15 @@ export function SortableTree(props: ISortableTreeProps) {
     }
   };
 
-  const select = (path: TreePath) => {
-    if (props.onSelected) {
-      props.onSelected(path);
-    }
-  };
+  // const select = (path: TreePath) => {
+  //   if (props.onSelected) {
+  //     props.onSelected(path);
+  //   }
+  // };
 
   const onItemClicked = (p: TreePath) => {
     // select(p);
+    console.log(p);
   };
 
   const onItemIconClicked = (currentPath: TreePath, iconIndex: number) => {

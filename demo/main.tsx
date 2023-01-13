@@ -3,7 +3,7 @@ import { createRoot } from "react-dom/client";
 import { FormantProvider } from "@formant/ui-sdk";
 import { Authentication, Fleet, App } from "@formant/data-sdk";
 import { LiveUniverseData } from "@formant/universe-connector";
-import { defined, LayerRegistry, TeleportLayer, Universe } from "../src/main";
+import { defined, LayerRegistry, Universe } from "../src/main";
 import { SimulatedUniverseData } from "./SimulatedUniverseData";
 import { createScene } from "./createScene";
 import { TestLayer } from "./TestLayer";
@@ -14,22 +14,21 @@ const urlParams = new URLSearchParams(window.location.search);
 const demo = urlParams.get("demo");
 // let moduleConfiguration = configTest;
 
-LayerRegistry.register(TeleportLayer);
+// LayerRegistry.register(TeleportLayer);
 LayerRegistry.register(TestLayer);
 
 
 
 function ViewerApp() {
   const [config, setConfig] = React.useState(configTest);
-  const [authToken, setAuthToken] = React.useState('');
-  const data = new LiveUniverseData();
+  const [authenticated, setAuthenticated] = React.useState(false);
 
   React.useEffect(() => {
     const getDevice = async () => {
-      await Authentication.waitTilAuthenticated().finally(
+      await Authentication.waitTilAuthenticated().then(
         () => {
           console.log(Authentication.token)
-          setAuthToken(defined(Authentication.token));
+          setAuthenticated(Authentication.isAuthenticated);
         }
       );
       const device = await Fleet.getCurrentDevice();
@@ -38,6 +37,7 @@ function ViewerApp() {
 
       console.log(await device.getTelemetry('base_station.location', new Date(Date.now() - 2000), new Date()));
       console.log(await device.getTelemetry('eko.localization.odom', new Date(Date.now() - 2000), new Date()));
+      console.log(JSON.parse(defined(await App.getCurrentModuleConfiguration())));
 
 
       // const moduleConfiguration = JSON.parse(defined(await App.getCurrentModuleConfiguration()));
@@ -51,15 +51,11 @@ function ViewerApp() {
   // const data =
   //    demo === "true" ? new SimulatedUniverseData(config) : new LiveUniverseData();
 
-  window.setInterval(() => {
-    data.setTime(new Date());
-  }, 60 / 12);
-
   return (
 
-    authToken ? (<Universe
+    authenticated ? (<Universe
       initialSceneGraph={createScene(config)}
-      universeData={data}
+      universeData={new LiveUniverseData()}
       mode="edit"
       onSceneGraphChange={(_) => {
         // console.log(JSON.stringify(_));

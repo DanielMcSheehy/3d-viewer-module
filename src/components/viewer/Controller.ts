@@ -1,8 +1,8 @@
-import { Group, Raycaster, XRHandedness } from "three";
+import { Group, Raycaster } from 'three';
 
 export interface IController {
   raycaster: Raycaster;
-  handedness: XRHandedness;
+  handedness: any;
   pulse(intensity: number, duration: number): void;
 }
 export type Controller = Group & IController;

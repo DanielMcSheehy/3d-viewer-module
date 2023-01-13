@@ -6,8 +6,7 @@ export const FARM_BOT_2_DEVICE_ID = 'farmbot2';
 export const FARM_BOT_3_DEVICE_ID = 'farmbot3';
 
 function createSatelliteLayer(
-  latitude: number,
-  longitude: number,
+  baseStationLocationStream: string,
   size: number
 ): SceneGraphElement {
   return {
@@ -20,14 +19,6 @@ function createSatelliteLayer(
     visible: true,
     position: { type: 'manual', x: 0, y: 0, z: 0 },
     fieldValues: {
-      latitude: {
-        type: 'number',
-        value: Number(latitude),
-      },
-      longitude: {
-        type: 'number',
-        value: Number(longitude),
-      },
       size: {
         type: 'number',
         value: Number(size),
@@ -38,7 +29,7 @@ function createSatelliteLayer(
       {
         id: uuid.v4(),
         sourceType: 'telemetry',
-        streamName: 'base_station.location',
+        streamName: baseStationLocationStream,
         streamType: 'location',
       },
     ],
@@ -48,8 +39,7 @@ function createSatelliteLayer(
 function createFarmbot(
   name: string,
   deviceId: string,
-  originLatitude: number,
-  originLongitude: number
+  odometryStream: string
 ): SceneGraphElement {
   return {
     id: uuid.v4(),
@@ -81,43 +71,11 @@ function createFarmbot(
         data: {},
         dataSources: [],
       },
-      {
-        id: uuid.v4(),
-        editing: false,
-        type: 'point_cloud',
-        name: 'Farmbot Point Cloud',
-        deviceContext: FARM_BOT_1_DEVICE_ID,
-        children: [],
-        visible: true,
-        position: {
-          type: 'manual',
-          x: 0,
-          y: 0,
-          z: 0,
-        },
-        fieldValues: {
-          pointSize: {
-            type: 'number',
-            value: 5,
-          },
-        },
-        data: {},
-        dataSources: [
-          {
-            id: uuid.v4(),
-            sourceType: 'realtime',
-            rosTopicName: '/farmbot/points',
-            rosTopicType: 'sensor_msgs/PointCloud2',
-          },
-        ],
-      },
     ],
     visible: true,
     position: {
-      type: 'gps',
-      stream: 'farmbot.gps',
-      relativeToLatitude: Number(originLatitude),
-      relativeToLongitude: Number(originLongitude),
+      type: 'localization',
+      stream: odometryStream,
     },
     fieldValues: {},
     data: {},
@@ -127,21 +85,15 @@ function createFarmbot(
 
 export function createScene(configuration: any) {
   const devices = configuration?.devices?.map((device) =>
-    createFarmbot(
-      device.name,
-      device.deviceId,
-      configuration.latitude,
-      configuration.longitude
-    )
+    createFarmbot(device.name, device.deviceId, device.odometryStream)
   );
 
   const sg: SceneGraphElement[] = [
     createSatelliteLayer(
-      configuration.latitude,
-      configuration.longitude,
+      configuration.baseStationLocationStream,
       configuration.size
     ),
-    // ...devices,
+    ...devices,
 
     // createFarmbot('Farmbot 2', FARM_BOT_2_DEVICE_ID),
     // createFarmbot('Farmbot 3', FARM_BOT_3_DEVICE_ID),

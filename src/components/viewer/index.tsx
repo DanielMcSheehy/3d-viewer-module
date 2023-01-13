@@ -168,6 +168,7 @@ export class UniverseViewer extends Component<IUniverseViewerProps> {
         this.renderer.domElement
       );
       // this.orbitControls.maxDistance = null;
+      // this.orbitControls.enablePan = false;
       this.orbitControls.update();
       this.editControls = new TransformControls(
         this.camera,
@@ -302,7 +303,7 @@ export class UniverseViewer extends Component<IUniverseViewerProps> {
       this.orbitControls.update();
     }
     this.renderer?.setSize(width, height);
-  };
+  }
 
   private notifyRaycasterChanged() {
     Array.from(this.pathToLayer.values()).forEach((_) => {
@@ -448,6 +449,7 @@ export class UniverseViewer extends Component<IUniverseViewerProps> {
   public render() {
     return (
       <MeasureContainer>
+        {/* @ts-ignore */}
         <Measure onResize={this.onResize}>
           <div
             ref={(_) => {

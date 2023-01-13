@@ -1,31 +1,11 @@
 {
-  "latitude": 37.196,
-  "longitude": -121.7194,
-  "size": 160,
+  "baseStationLocationStream": "base_station.location",
+  "mapSize": 160,
   "devices": [
     {
-      "deviceId": "farmbot1",
+      "deviceId": "00fff1ae-e5ad-40d1-b715-7310c7df29c6",
       "name": "Farmbot 1",
-      "locationStream": "farmbot1/gps",
-      "pointCloudStream": "farmbot1/pcd"
-    },
-    {
-      "deviceId": "farmbot2",
-      "name": "Farmbot 2",
-      "locationStream": "farmbot1/gps",
-      "pointCloudStream": "farmbot1/pcd"
-    },
-    {
-      "deviceId": "farmbot3",
-      "name": "Farmbot 3",
-      "locationStream": "farmbot1/gps",
-      "pointCloudStream": "farmbot1/pcd"
-    },
-    {
-      "deviceId": "farmbot4",
-      "name": "Farmbot 4",
-      "locationStream": "farmbot1/gps",
-      "pointCloudStream": "farmbot1/pcd"
+      "odometryStream": "eko.localization.odom"
     }
   ]
 }

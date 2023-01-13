@@ -30,11 +30,6 @@ const SidebarContainer = styled.div<ISidebarContainer>`
 
 `;
 
-const PropertiesSectionDiv = styled.div`
-  display: grid;
-  margin-bottom: 2rem;
-`;
-
 const ToggleButton = styled.button`
   width: 20px;
   height: 20px;
