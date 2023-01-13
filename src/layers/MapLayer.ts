@@ -74,8 +74,7 @@ export class MapLayer extends UniverseLayer {
           Number(results[0].points[0][1].latitude),
         ];
       });
-    // this.distance = (this.getField(MapLayer.fields.size) || 0) / 2;
-    // await Authentication.waitTilAuthenticated();
+    this.distance = (this.getField(MapLayer.fields.size) || 0) / 2;
 
     this.onData();
   }
@@ -84,14 +83,6 @@ export class MapLayer extends UniverseLayer {
     const { username, styleId, width, height, accessToken } = mapBoxConfig;
 
     this.texture = new Texture();
-
-    const zoom = 17;
-    const mapSize = 50;
-    const numImagesX = 3;
-    const numImagesY = 3;
-    const degreesPerMeter = 360 / (2 * Math.PI * 6378137);
-    const imageSizeX = mapSize * degreesPerMeter;
-    const imageSizeY = mapSize * degreesPerMeter;
 
     // calculate bounding box, given center and distance
     const bearings = {
