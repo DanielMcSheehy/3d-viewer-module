@@ -37,7 +37,7 @@ function createSatelliteLayer(
   };
 }
 
-function createFarmbot(
+function createRobot(
   name: string,
   deviceId: string,
   odometryStream: string,
@@ -73,6 +73,18 @@ function createFarmbot(
         data: {},
         dataSources: [],
       },
+      {
+        id: uuid.v4(),
+        editing: false,
+        type: 'deviceDot',
+        name: 'Device Dot',
+        deviceContext: undefined,
+        children: [],
+        visible: true,
+        position: { type: 'manual', x: 0, y: 0, z: 0 },
+        fieldValues: {},
+        data: {},
+      },
     ],
     visible: deviceVisibility,
     position: {
@@ -86,9 +98,9 @@ function createFarmbot(
 }
 
 export function createScene(configuration: any) {
-  const devices =
+  const robots =
     configuration?.devices?.map((device) =>
-      createFarmbot(
+      createRobot(
         device.name,
         device.deviceId,
         device.odometryStream,
@@ -102,7 +114,7 @@ export function createScene(configuration: any) {
       configuration.mapSize,
       configuration.mapVisibility
     ),
-    ...devices,
+    ...robots,
     {
       id: uuid.v4(),
       editing: false,

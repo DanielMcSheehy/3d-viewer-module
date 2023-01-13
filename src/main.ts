@@ -14,6 +14,7 @@ import { DeviceVisualTFLayer } from './layers/DeviceVisualTFLayer';
 import { EmptyLayer } from './layers/EmptyLayer';
 import { ChartLayer } from './layers/ChartLayer';
 import { MapLayer } from './layers/MapLayer';
+import { DeviceDotLayer } from './layers/DeviceDotLayer';
 // import { TrailLayer } from './layers/TrailLayer';
 
 export * from './components/Universe';
@@ -79,4 +80,5 @@ LayerRegistry.register(VideoLayer);
 LayerRegistry.register(EmptyLayer);
 LayerRegistry.register(ChartLayer);
 LayerRegistry.register(MapLayer);
+LayerRegistry.register(DeviceDotLayer);
 // LayerRegistry.register(TrailLayer);
