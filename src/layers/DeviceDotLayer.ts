@@ -6,7 +6,8 @@ export class DeviceDotLayer extends UniverseLayer {
 
   static commonName = 'Device Dot';
 
-  static description = 'This is just a simple cube.';
+  static description =
+    'Sphere with arrow to represent device location and orientation';
 
   geo = new THREE.SphereGeometry(0.1);
 
