@@ -10,8 +10,7 @@ const mapBoxConfig = {
   width: 1200,
   height: 1200,
   bearing: 0,
-  accessToken:
-    'mapboxAPIToken',
+  accessToken: import.meta.env.VITE_MAPBOX_ACCESS_TOKEN,
 };
 
 export class MapLayer extends UniverseLayer {
