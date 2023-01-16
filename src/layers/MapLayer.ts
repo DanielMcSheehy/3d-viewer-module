@@ -2,6 +2,7 @@ import { Mesh, MeshBasicMaterial, PlaneGeometry, Texture } from 'three';
 import { computeDestinationPoint } from 'geolib';
 import { GeolibGeoJSONPoint } from 'geolib/es/types';
 import { Fleet } from '@formant/data-sdk';
+import { defined } from '@formant/universe-core';
 import { UniverseLayer } from './UniverseLayer';
 
 const mapBoxConfig = {
@@ -61,18 +62,22 @@ export class MapLayer extends UniverseLayer {
 
   async init() {
     const device = await Fleet.getCurrentDevice();
-    await device
-      .getTelemetry(
-        'base_station.location',
-        new Date(Date.now() - 2000),
-        new Date()
-      )
-      .then((results) => {
-        this.location = [
-          Number(results[0].points[0][1].longitude),
-          Number(results[0].points[0][1].latitude),
-        ];
-      });
+    const dataSource = defined(this.layerDataSources)[0];
+
+    if (dataSource.sourceType === 'telemetry') {
+      await device
+        .getTelemetry(
+          dataSource.streamName,
+          new Date(Date.now() - 2000),
+          new Date()
+        )
+        .then((results) => {
+          this.location = [
+            Number(results[0].points[0][1].longitude),
+            Number(results[0].points[0][1].latitude),
+          ];
+        });
+    }
     this.distance = (this.getField(MapLayer.fields.size) || 0) / 2;
 
     this.onData();
