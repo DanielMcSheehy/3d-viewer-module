@@ -37,7 +37,7 @@ function createSatelliteLayer(
   };
 }
 
-function createRobot(
+function createDevice(
   name: string,
   deviceId: string,
   odometryStream: string,
@@ -98,9 +98,9 @@ function createRobot(
 }
 
 export function createScene(configuration: any) {
-  const robots =
+  const devices =
     configuration?.devices?.map((device) =>
-      createRobot(
+      createDevice(
         device.name,
         device.deviceId,
         device.odometryStream,
@@ -114,7 +114,7 @@ export function createScene(configuration: any) {
       configuration.mapSize,
       configuration.mapVisibility
     ),
-    ...robots,
+    ...devices,
     {
       id: uuid.v4(),
       editing: false,
