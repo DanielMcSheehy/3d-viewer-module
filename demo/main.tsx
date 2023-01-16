@@ -2,7 +2,7 @@ import * as React from "react";
 import { createRoot } from "react-dom/client";
 import { FormantProvider } from "@formant/ui-sdk";
 import { Authentication, App } from "@formant/data-sdk";
-import { LiveUniverseData } from "@formant/universe-connector";
+import { TelemetryUniverseData } from "@formant/universe-connector";
 import { defined, Universe } from "../src/main";
 import { createScene } from "./createScene";
 import { SimulatedUniverseData } from "./SimulatedUniverseData";
@@ -37,7 +37,7 @@ function ViewerApp() {
 
     (authenticated && config) ? (<Universe
       initialSceneGraph={createScene(config)}
-      universeData={new LiveUniverseData()}
+      universeData={new TelemetryUniverseData()}
       mode="edit"
       onSceneGraphChange={(_) => {
         // console.log(JSON.stringify(_));
