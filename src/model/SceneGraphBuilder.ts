@@ -6,21 +6,13 @@ import { LayerRegistry } from "../layers/LayerRegistry";
 import { UniverseLayer } from "../layers/UniverseLayer";
 
 export class SceneBuilder {
-  scene: SceneGraph = [];
-
-  deviceId!: string;
-
-  constructor(deviceId: string) {
-    this.deviceId = deviceId;
-  }
-
-  addGround(
+  static ground(
     groundLayerConfig: {
       positioning: Positioning;
       flat: boolean;
     } = { positioning: PositioningBuilder.fixed(0, 0, 0), flat: true }
-  ) {
-    this.scene.push({
+  ): SceneGraphElement {
+    return {
       id: uuid.v4(),
       editing: false,
       type: "ground",
@@ -35,17 +27,16 @@ export class SceneBuilder {
         },
       },
       data: {},
-    });
-    return this;
+    };
   }
 
-  addDeviceMarker(
+  static deviceMarker(
     dotLayerConfig: {
       positioning: Positioning;
       dataSources?: UniverseDataSource[];
     } = { positioning: PositioningBuilder.fixed(0, 0, 0), dataSources: [] }
-  ) {
-    this.scene.push({
+  ): SceneGraphElement {
+    return {
       id: uuid.v4(),
       editing: false,
       type: "deviceDot",
@@ -56,15 +47,9 @@ export class SceneBuilder {
       fieldValues: {},
       data: {},
       dataSources: dotLayerConfig.dataSources,
-    });
-    return this;
+    };
   }
-
-  addLayer(layer: SceneGraphElement) {
-    layer.deviceContext = this.deviceId;
-    this.scene.push(layer);
-    return this;
-  }
+  /*
 
   addUrdf(
     urdfLayerConfig: {
@@ -174,8 +159,5 @@ export class SceneBuilder {
     });
     return this;
   }
-
-  build() {
-    return this.scene;
-  }
+*/
 }

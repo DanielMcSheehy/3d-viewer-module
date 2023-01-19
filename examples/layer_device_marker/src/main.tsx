@@ -6,14 +6,16 @@ import {
 } from "../../../src/main";
 import { ExampleUniverseData } from "../../common/ExampleUniverseData";
 
-const builder = new SceneBuilder("test_device");
-builder.addGround();
-builder.addDeviceMarker({ positioning: PositioningBuilder.fixed(2, -2, 0) });
-builder.addDeviceMarker({ positioning: PositioningBuilder.fixed(0, 2, 0) });
-const scene = builder.build();
-
 createUniverse(
   definedAndNotNull(document.querySelector("#app")),
   new ExampleUniverseData(),
-  scene
+  [
+    SceneBuilder.ground(),
+    SceneBuilder.deviceMarker({
+      positioning: PositioningBuilder.fixed(2, -2, 0),
+    }),
+    SceneBuilder.deviceMarker({
+      positioning: PositioningBuilder.fixed(2, -2, 0),
+    }),
+  ]
 );
