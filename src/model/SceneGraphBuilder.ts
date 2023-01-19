@@ -39,6 +39,27 @@ export class SceneBuilder {
     return this;
   }
 
+  addDeviceMarker(
+    dotLayerConfig: {
+      positioning: Positioning;
+      dataSources?: UniverseDataSource[];
+    } = { positioning: PositioningBuilder.fixed(0, 0, 0), dataSources: [] }
+  ) {
+    this.scene.push({
+      id: uuid.v4(),
+      editing: false,
+      type: "deviceDot",
+      name: "Dot",
+      children: [],
+      visible: true,
+      position: dotLayerConfig.positioning,
+      fieldValues: {},
+      data: {},
+      dataSources: dotLayerConfig.dataSources,
+    });
+    return this;
+  }
+
   addLayer(layer: SceneGraphElement) {
     layer.deviceContext = this.deviceId;
     this.scene.push(layer);
