@@ -35,6 +35,7 @@ export * from "./formantColor";
 export * from "./oculusQuest";
 export * from "./model/PositioningBuilder";
 export * from "./model/SceneGraphBuilder";
+export * from "./createUniverse";
 
 export { defined, definedAndNotNull } from "./common/defined";
 
