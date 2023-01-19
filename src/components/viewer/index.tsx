@@ -17,7 +17,7 @@ import styled from "styled-components";
 import { RGBELoader } from "../../../three-utils/loaders/RGBELoader";
 import { OrbitControls } from "../../../three-utils/controls/OrbitControls";
 import { TransformControls } from "../../../three-utils/controls/TransformControls";
-import { defined, definedAndNotNull } from "../../../common/defined";
+import { defined, definedAndNotNull } from "../../common/defined";
 import { LayerRegistry } from "../../layers/LayerRegistry";
 import { TransformLayer } from "../../layers/TransformLayer";
 import {
@@ -32,13 +32,13 @@ import {
   SceneGraph,
 } from "../../model/SceneGraph";
 import { TreePath, treePathEquals } from "../../model/ITreeElement";
-import { Color } from "../../../common/Color";
+import { Color } from "../../common/Color";
 
 const MeasureContainer = styled.div`
   width: 100%;
   height: 100vh;
 
-  background: #282F45;
+  background: #282f45;
 
   > div {
     overflow: hidden;
@@ -303,7 +303,7 @@ export class UniverseViewer extends Component<IUniverseViewerProps> {
       this.orbitControls.update();
     }
     this.renderer?.setSize(width, height);
-  }
+  };
 
   private notifyRaycasterChanged() {
     Array.from(this.pathToLayer.values()).forEach((_) => {
@@ -316,7 +316,6 @@ export class UniverseViewer extends Component<IUniverseViewerProps> {
       defined(_.contentNode).onUpdate(delta);
     });
   }
-
 
   public removeSceneGraphItem(sceneGraph: SceneGraph, path: TreePath) {
     if (this.attachedPath && treePathEquals(path, this.attachedPath)) {
@@ -380,7 +379,10 @@ export class UniverseViewer extends Component<IUniverseViewerProps> {
 
   public zoom(x: number) {
     if (this.orbitControls) {
-      if (x < 0 && this.orbitControls.getDistance() >= this.orbitControls.maxDistance) {
+      if (
+        x < 0 &&
+        this.orbitControls.getDistance() >= this.orbitControls.maxDistance
+      ) {
         return;
       }
 

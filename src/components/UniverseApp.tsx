@@ -6,8 +6,8 @@ import { useRecoilState } from "recoil";
 import { Box, Button, Icon, Select, Stack, Typography } from "@formant/ui-sdk";
 import { IUniverseData, UniverseDataSource } from "@formant/universe-core";
 import styled from "styled-components";
-import { defined, definedAndNotNull } from "../../common/defined";
-import { throttle } from "../../common/throttle";
+import { defined, definedAndNotNull } from "../common/defined";
+import { throttle } from "../common/throttle";
 import { LayerType } from "../layers";
 import { LayerRegistry } from "../layers/LayerRegistry";
 import {
@@ -49,40 +49,40 @@ const Controls = styled.div`
 `;
 
 const ControlGroup = styled.div`
-    box-shadow: 0 0 1.25rem #0A0B10;
-    display: flex;
-    flex-direction: column;
-    margin: 0.625rem;
-    margin-bottom: 0;
-    background: #1C1E2D;
-    border: 0.078125rem solid #3b4668;
-    border-radius: 1rem;
-    box-sizing: border-box;
-    pointer-events: all;
-    overflow: hidden;
+  box-shadow: 0 0 1.25rem #0a0b10;
+  display: flex;
+  flex-direction: column;
+  margin: 0.625rem;
+  margin-bottom: 0;
+  background: #1c1e2d;
+  border: 0.078125rem solid #3b4668;
+  border-radius: 1rem;
+  box-sizing: border-box;
+  pointer-events: all;
+  overflow: hidden;
 
-    button {
-        padding: 0;
-        margin: 0;
-        background: transparent;
-        color: inherit;
-        border: none;
-        text-decoration: none;
-        position: relative;
-        line-height: normal;
+  button {
+    padding: 0;
+    margin: 0;
+    background: transparent;
+    color: inherit;
+    border: none;
+    text-decoration: none;
+    position: relative;
+    line-height: normal;
 
-        &:not([disabled]) {
-            cursor: pointer;
-        }
-
-        & + button {
-            border-top: 0.039375rem solid #3b4668;
-        }
-
-        & > svg {
-          vertical-align: middle;
-        }
+    &:not([disabled]) {
+      cursor: pointer;
     }
+
+    & + button {
+      border-top: 0.039375rem solid #3b4668;
+    }
+
+    & > svg {
+      vertical-align: middle;
+    }
+  }
 `;
 
 const UniverseContainer = styled.div`
@@ -441,7 +441,7 @@ export function UniverseApp(props: IUniverseAppProps) {
         {
           icon: element.visible ? "eye" : "eye_closed",
           description: "click to toggle visibility",
-        }
+        },
       ],
       children: element.children.map((_, i) =>
         buildSubTree(_, [...path, i], color)
@@ -452,16 +452,14 @@ export function UniverseApp(props: IUniverseAppProps) {
   const buildTree = (): TreeElement[] => [
     {
       title: "3D scene",
-      icons: [
-      ],
+      icons: [],
       children: sceneGraph.map((_, i) => buildSubTree(_, [i])),
     },
   ];
 
-
   const updateSidebarTree = () => {
     setSidebarTree(buildTree());
-  }
+  };
 
   React.useEffect(() => {
     updateSidebarTree();
@@ -720,8 +718,6 @@ export function UniverseApp(props: IUniverseAppProps) {
     }
   };
 
-
-
   const { mode } = props;
   let element: SceneGraphElement | null | undefined;
   let hasParentContext = false;
@@ -860,9 +856,11 @@ export function UniverseApp(props: IUniverseAppProps) {
                 </>
               )}
             </UniverseSidebar>
-          ) : <ToggleButton onClick={() => toggleSidebar()}>
-            <Icon name="menu" />
-          </ToggleButton>}
+          ) : (
+            <ToggleButton onClick={() => toggleSidebar()}>
+              <Icon name="menu" />
+            </ToggleButton>
+          )}
           <Box
             sx={{ position: "relative", overflow: "hidden", height: "100%" }}
           >
@@ -875,12 +873,14 @@ export function UniverseApp(props: IUniverseAppProps) {
             )}
             <Controls>
               <ControlGroup>
-                <button type="button" onMouseDown={zoomIn}
-                  onMouseUp={stopZoom}>
+                <button type="button" onMouseDown={zoomIn} onMouseUp={stopZoom}>
                   <Icon name="plus" />
                 </button>
-                <button type="button" onMouseDown={zoomOut}
-                  onMouseUp={stopZoom}>
+                <button
+                  type="button"
+                  onMouseDown={zoomOut}
+                  onMouseUp={stopZoom}
+                >
                   <Icon name="minus" />
                 </button>
               </ControlGroup>

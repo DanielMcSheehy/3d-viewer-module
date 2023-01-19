@@ -7,8 +7,8 @@ import {
   LineBasicMaterial,
   Mesh,
   Path,
-} from 'three';
-import { range } from '../../common/range';
+} from "three";
+import { range } from "../common/range";
 
 function polarGridCircle(
   radius: number,

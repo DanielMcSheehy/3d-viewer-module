@@ -10,30 +10,30 @@ import {
   Object3D,
   PlaneGeometry,
   SphereGeometry,
-} from 'three';
-import * as uuid from 'uuid';
-import { IUniverseData } from '@formant/universe-core';
-import { UniverseLayer } from './UniverseLayer';
-import { defined, definedAndNotNull } from '../../common/defined';
-import { LayerSuggestion } from './LayerRegistry';
+} from "three";
+import * as uuid from "uuid";
+import { IUniverseData } from "@formant/universe-core";
+import { UniverseLayer } from "./UniverseLayer";
+import { defined, definedAndNotNull } from "../common/defined";
+import { LayerSuggestion } from "./LayerRegistry";
 
 export class VideoLayer extends UniverseLayer {
-  static layerTypeId = 'video';
+  static layerTypeId = "video";
 
-  static commonName = 'Video';
+  static commonName = "Video";
 
-  static description = 'A video representing a camera.';
+  static description = "A video representing a camera.";
 
   static usesData = true;
 
   static fields = {
     shape: {
-      name: 'Shape',
+      name: "Shape",
       description: "The shape you'd like the video to be",
-      placeholder: 'sphere',
-      value: '',
-      type: 'text' as const,
-      location: ['create' as const],
+      placeholder: "sphere",
+      value: "",
+      type: "text" as const,
+      location: ["create" as const],
     },
   };
 
@@ -45,12 +45,12 @@ export class VideoLayer extends UniverseLayer {
     if (deviceContext) {
       (await universeData.getHardwareStreams(deviceContext)).forEach(
         (stream) => {
-          if (stream.rtcStreamType === 'h264-video-frame') {
+          if (stream.rtcStreamType === "h264-video-frame") {
             dataLayers.push({
               sources: [
                 {
                   id: uuid.v4(),
-                  sourceType: 'hardware',
+                  sourceType: "hardware",
                   rtcStreamName: stream.name,
                 },
               ],
@@ -79,8 +79,8 @@ export class VideoLayer extends UniverseLayer {
       defined(this.getLayerContext()).deviceId,
       defined(dataSource),
       (d) => {
-        if (typeof d === 'symbol') {
-          throw new Error('unhandled data status');
+        if (typeof d === "symbol") {
+          throw new Error("unhandled data status");
         }
         this.onData(d as HTMLCanvasElement);
       }
@@ -91,25 +91,25 @@ export class VideoLayer extends UniverseLayer {
     [key in string]: Material | Mesh | Group | Object3D | undefined;
   } {
     return {
-      'video-mesh': this.mesh,
+      "video-mesh": this.mesh,
     };
   }
 
   onData = (frame: HTMLCanvasElement) => {
     const shape = this.getField(VideoLayer.fields.shape);
-    if (shape === 'stereo-side-by-side') {
+    if (shape === "stereo-side-by-side") {
       if (!this.group) {
-        const canvas = document.createElement('CANVAS') as HTMLCanvasElement;
+        const canvas = document.createElement("CANVAS") as HTMLCanvasElement;
         canvas.width = frame.width;
         canvas.height = frame.height;
         const texture = new CanvasTexture(canvas);
-        this.ctx = definedAndNotNull(canvas.getContext('2d'));
+        this.ctx = definedAndNotNull(canvas.getContext("2d"));
         this.texture = texture;
         const bufferedGeometryPlaneLeft = new BufferGeometry();
         const hsize = 0.5;
         const vsize = 0.5;
         bufferedGeometryPlaneLeft.setAttribute(
-          'position',
+          "position",
           new BufferAttribute(
             new Float32Array([
               -hsize,
@@ -129,7 +129,7 @@ export class VideoLayer extends UniverseLayer {
           )
         );
         bufferedGeometryPlaneLeft.setAttribute(
-          'uv',
+          "uv",
           new BufferAttribute(new Float32Array([0, 0, 0.5, 0, 0.5, 1, 0, 1]), 2)
         );
         bufferedGeometryPlaneLeft.setIndex([0, 1, 2, 0, 2, 3]);
@@ -147,7 +147,7 @@ export class VideoLayer extends UniverseLayer {
 
         const bufferedGeometryPlaneRight = new BufferGeometry();
         bufferedGeometryPlaneRight.setAttribute(
-          'position',
+          "position",
           new BufferAttribute(
             new Float32Array([
               -hsize,
@@ -167,7 +167,7 @@ export class VideoLayer extends UniverseLayer {
           )
         );
         bufferedGeometryPlaneRight.setAttribute(
-          'uv',
+          "uv",
           new BufferAttribute(new Float32Array([0.5, 0, 1, 0, 1, 1, 0.5, 1]), 2)
         );
         bufferedGeometryPlaneRight.setIndex([0, 1, 2, 0, 2, 3]);
@@ -193,25 +193,25 @@ export class VideoLayer extends UniverseLayer {
       }
     } else {
       if (!this.mesh && frame.width > 0 && frame.height > 0) {
-        const canvas = document.createElement('CANVAS') as HTMLCanvasElement;
+        const canvas = document.createElement("CANVAS") as HTMLCanvasElement;
         canvas.width = frame.width;
         canvas.height = frame.height;
         const texture = new CanvasTexture(canvas);
-        this.ctx = definedAndNotNull(canvas.getContext('2d'));
+        this.ctx = definedAndNotNull(canvas.getContext("2d"));
         this.texture = texture;
 
         const ninetyDegrees = Math.PI / 2;
         const isRotated =
-          shape === 'sphere_rotated' || shape === 'sphere_rotated_fullscreen';
+          shape === "sphere_rotated" || shape === "sphere_rotated_fullscreen";
         const isSphere =
-          shape === 'sphere' ||
-          shape === 'sphere_rotated' ||
-          shape === 'sphere_fullscreen' ||
-          shape === 'sphere_rotated_fullscreen';
+          shape === "sphere" ||
+          shape === "sphere_rotated" ||
+          shape === "sphere_fullscreen" ||
+          shape === "sphere_rotated_fullscreen";
         if (isSphere) {
           const isFullScreen =
-            shape === 'sphere_fullscreen' ||
-            shape === 'sphere_rotated_fullscreen';
+            shape === "sphere_fullscreen" ||
+            shape === "sphere_rotated_fullscreen";
           const material = new MeshBasicMaterial({
             map: texture,
             side: BackSide,

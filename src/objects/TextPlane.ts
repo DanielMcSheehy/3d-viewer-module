@@ -7,8 +7,8 @@ import {
   Object3D,
   PlaneGeometry,
   Texture,
-} from 'three';
-import { definedAndNotNull } from '../../common/defined';
+} from "three";
+import { definedAndNotNull } from "../common/defined";
 
 export class TextPlane extends Group {
   mesh: Object3D | undefined;
@@ -57,13 +57,13 @@ export class TextPlane extends Group {
       this.remove(this.mesh);
       this.mesh = undefined;
     }
-    const fontface = 'Inter';
+    const fontface = "Inter";
     const fontsize = this.currentFontSize;
     const message = this.currentText;
     const font = `${fontsize * 4}px ${fontface}`;
 
-    const canvas = document.createElement('canvas');
-    const context = definedAndNotNull(canvas.getContext('2d'));
+    const canvas = document.createElement("canvas");
+    const context = definedAndNotNull(canvas.getContext("2d"));
 
     // get size data (height depends only on font size)
     context.font = font;
@@ -79,7 +79,7 @@ export class TextPlane extends Group {
 
     // background color
     context.font = font;
-    context.textBaseline = 'top';
+    context.textBaseline = "top";
     context.fillStyle = this.toColor(this.currentColor);
     context.fillText(message, 0, 0);
 

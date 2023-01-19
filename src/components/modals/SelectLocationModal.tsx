@@ -4,7 +4,7 @@ import { ILocation } from "@formant/data-sdk";
 import { TextField, DialogContentText, Stack, Select } from "@formant/ui-sdk";
 import { IUniverseData } from "@formant/universe-core";
 import { Modal } from "./Modal";
-import { fork } from "../../../common/fork";
+import { fork } from "../../common/fork";
 
 interface ISelectLocationModalProps {
   deviceContext: string;

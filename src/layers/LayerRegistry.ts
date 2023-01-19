@@ -1,10 +1,10 @@
-import { Object3D, PerspectiveCamera } from 'three';
-import { IUniverseData, UniverseDataSource } from '@formant/universe-core';
-import { LayerType } from '.';
-import { defined } from '../../common/defined';
-import { UniverseLayer } from './UniverseLayer';
-import { LayerFields, LayerFieldLocation } from '../model/LayerField';
-import { TransformLayer } from './TransformLayer';
+import { Object3D, PerspectiveCamera } from "three";
+import { IUniverseData, UniverseDataSource } from "@formant/universe-core";
+import { LayerType } from ".";
+import { defined } from "../common/defined";
+import { UniverseLayer } from "./UniverseLayer";
+import { LayerFields, LayerFieldLocation } from "../model/LayerField";
+import { TransformLayer } from "./TransformLayer";
 
 export interface LayerSuggestion {
   sources: UniverseDataSource[];

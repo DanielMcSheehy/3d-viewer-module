@@ -14,7 +14,7 @@ import {
 } from "three";
 import { IUniverseData, IMarker3DArray } from "@formant/universe-core";
 import * as uuid from "uuid";
-import { defined, definedAndNotNull } from "../../common/defined";
+import { defined, definedAndNotNull } from "../common/defined";
 import { GeometryWorld } from "../objects/GeometryWorld";
 import { LayerSuggestion } from "./LayerRegistry";
 import { UniverseLayer } from "./UniverseLayer";

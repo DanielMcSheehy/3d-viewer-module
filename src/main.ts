@@ -36,7 +36,7 @@ export * from "./oculusQuest";
 export * from "./model/PositioningBuilder";
 export * from "./model/SceneGraphBuilder";
 
-export { defined, definedAndNotNull } from "../common/defined";
+export { defined, definedAndNotNull } from "./common/defined";
 
 LayerRegistry.register(DataLayer);
 LayerRegistry.register(LabelLayer);

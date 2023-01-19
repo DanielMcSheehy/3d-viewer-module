@@ -3,7 +3,7 @@ import * as JSZip from "jszip";
 import * as uuid from "uuid";
 import { IUniverseData } from "@formant/universe-core";
 import { Object3D, Event, Group, Material, Mesh, BufferGeometry } from "three";
-import { defined } from "../../common/defined";
+import { defined } from "../common/defined";
 import { Urdf } from "../objects/Urdf";
 import { LayerSuggestion } from "./LayerRegistry";
 import { UniverseLayer } from "./UniverseLayer";

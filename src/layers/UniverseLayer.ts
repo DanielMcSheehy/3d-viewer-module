@@ -13,20 +13,20 @@ import {
   TextureLoader,
   Vector3,
   WebXRManager,
-} from 'three';
-import { IUniverseData, UniverseDataSource } from '@formant/universe-core';
-import { getRecoil, setRecoil } from 'recoil-nexus';
-import { Howl } from 'howler';
-import { LayerSuggestion } from './LayerRegistry';
-import { TransformLayer } from './TransformLayer';
+} from "three";
+import { IUniverseData, UniverseDataSource } from "@formant/universe-core";
+import { getRecoil, setRecoil } from "recoil-nexus";
+import { Howl } from "howler";
+import { LayerSuggestion } from "./LayerRegistry";
+import { TransformLayer } from "./TransformLayer";
 import {
   LayerField,
   LayerFields,
   LayerFieldType,
   LayerFieldTypeMap,
-} from '../model/LayerField';
-import { snackbarAtom } from '../state/snackbar';
-import { sceneGraphAtom } from '../state/sceneGraph';
+} from "../model/LayerField";
+import { snackbarAtom } from "../state/snackbar";
+import { sceneGraphAtom } from "../state/sceneGraph";
 import {
   findSceneGraphElement,
   ImagePlane,
@@ -36,24 +36,24 @@ import {
   SceneGraphElement,
   TextPlane,
   visitSceneGraphElement,
-} from '../main';
-import { Hand } from '../components/viewer/Hand';
-import { Controller } from '../components/viewer/Controller';
-import { HandheldController } from '../components/viewer/HandheldController';
-import { defined, definedAndNotNull } from '../../common/defined';
-import { Urdf } from '../objects/Urdf';
-import { Gizmo } from '../objects/Gizmo';
-import { TreePath } from '../model/ITreeElement';
+} from "../main";
+import { Hand } from "../components/viewer/Hand";
+import { Controller } from "../components/viewer/Controller";
+import { HandheldController } from "../components/viewer/HandheldController";
+import { defined, definedAndNotNull } from "../common/defined";
+import { Urdf } from "../objects/Urdf";
+import { Gizmo } from "../objects/Gizmo";
+import { TreePath } from "../model/ITreeElement";
 
 export type UniverseLayerContext = {
-  type: 'device';
+  type: "device";
   deviceId: string;
 };
 
 const typeMap = {
-  text: 'string',
-  number: 'number',
-  boolean: 'boolean',
+  text: "string",
+  number: "number",
+  boolean: "boolean",
 };
 
 export abstract class UniverseLayer extends Object3D {
@@ -166,7 +166,7 @@ export abstract class UniverseLayer extends Object3D {
   getLayerContext(): UniverseLayerContext | undefined {
     if (this.layerContext) {
       return {
-        type: 'device',
+        type: "device",
         deviceId: this.layerContext,
       };
     }
@@ -189,7 +189,7 @@ export abstract class UniverseLayer extends Object3D {
         );
         if (el.deviceContext) {
           return {
-            type: 'device',
+            type: "device",
             deviceId: el.deviceContext,
           };
         }
@@ -509,14 +509,14 @@ export abstract class UniverseLayer extends Object3D {
 
     const geometry = new BufferGeometry();
     geometry.setAttribute(
-      'position',
+      "position",
       new BufferAttribute(new Float32Array(positions), 3)
     );
-    geometry.setAttribute('uv', new BufferAttribute(new Float32Array(uvs), 2));
+    geometry.setAttribute("uv", new BufferAttribute(new Float32Array(uvs), 2));
 
     let texture: Texture | undefined;
     if (config.textureUrl) {
-      texture = new TextureLoader().load(config.textureUrl || '');
+      texture = new TextureLoader().load(config.textureUrl || "");
     }
     const m = new Mesh(
       geometry,

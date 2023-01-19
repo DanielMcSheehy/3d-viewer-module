@@ -1,6 +1,11 @@
 import * as uuid from "uuid";
 import { getDistance } from "geolib";
-import { ILocation, IUniverseData, IOdometry } from "@formant/universe-core";
+import {
+  ILocation,
+  IUniverseData,
+  IOdometry,
+  ITransformNode,
+} from "@formant/universe-core";
 import {
   Euler,
   Matrix4,
@@ -9,8 +14,7 @@ import {
   Quaternion,
   Vector3,
 } from "three";
-import { defined } from "../../common/defined";
-import { ITransformNode } from "../../model/ITransformNode";
+import { defined } from "../common/defined";
 import { Positioning } from "../model/SceneGraph";
 import { TreePath } from "../model/ITreeElement";
 

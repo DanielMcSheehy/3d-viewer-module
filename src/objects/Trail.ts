@@ -3,7 +3,7 @@ import { Group, Vector2 } from "three";
 import { Line2 } from "../../three-utils/lines/Line2";
 import { LineGeometry } from "../../three-utils/lines/LineGeometry";
 import { LineMaterial } from "../../three-utils/lines/LineMaterial";
-import { Color } from "../../common/Color";
+import { Color } from "../common/Color";
 
 export class Trail extends Group {
   private material = new LineMaterial({

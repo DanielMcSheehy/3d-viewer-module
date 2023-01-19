@@ -3,11 +3,11 @@ import { ITransformNode } from "@formant/data-sdk";
 import { useEffect } from "react";
 import { DialogContentText, Select } from "@formant/ui-sdk";
 import { IUniverseData } from "@formant/universe-core";
-import { defined } from "../../../common/defined";
+import { defined } from "../../common/defined";
 import { TreeElement, TreePath } from "../../model/ITreeElement";
 import { SortableTree } from "../SortableTree";
 import { Modal } from "./Modal";
-import { fork } from "../../../common/fork";
+import { fork } from "../../common/fork";
 
 interface ISelectTransformPathModalProps {
   deviceContext: string;

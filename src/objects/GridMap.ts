@@ -13,9 +13,9 @@ import {
   Texture,
 } from "three";
 import { IGridMap } from "@formant/universe-core";
-import { defined } from "../../common/defined";
-import { fork } from "../../common/fork";
-import { Color } from "../../common/Color";
+import { defined } from "../common/defined";
+import { fork } from "../common/fork";
+import { Color } from "../common/Color";
 import { transformMatrix } from "../math/transformMatrix";
 
 export class GridMap extends Group {

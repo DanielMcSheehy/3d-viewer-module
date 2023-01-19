@@ -2,7 +2,7 @@ import { ITransformNode } from "@formant/data-sdk";
 import { Vector2 } from "three";
 import * as uuid from "uuid";
 import { IUniverseData } from "@formant/universe-core";
-import { defined } from "../../common/defined";
+import { defined } from "../common/defined";
 import { TransformTree } from "../objects/TransformTree";
 import { ITransformTreeNode } from "../objects/transformTreeLoader";
 import { LayerSuggestion } from "./LayerRegistry";

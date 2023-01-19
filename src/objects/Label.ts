@@ -1,5 +1,5 @@
-import { Group, Sprite, SpriteMaterial, Texture } from 'three';
-import { definedAndNotNull } from '../../common/defined';
+import { Group, Sprite, SpriteMaterial, Texture } from "three";
+import { definedAndNotNull } from "../common/defined";
 
 function roundRect(
   ctx: CanvasRenderingContext2D,
@@ -46,13 +46,13 @@ export class Label extends Group {
       this.remove(this.sprite);
       this.sprite = undefined;
     }
-    const fontface = 'Inter';
+    const fontface = "Inter";
     const fontsize = 30;
     const message = this.currentText;
     const font = `${fontsize}px ${fontface}`;
 
-    const canvas = document.createElement('canvas');
-    const context = definedAndNotNull(canvas.getContext('2d'));
+    const canvas = document.createElement("canvas");
+    const context = definedAndNotNull(canvas.getContext("2d"));
 
     // get size data (height depends only on font size)
     context.font = font;
@@ -70,13 +70,13 @@ export class Label extends Group {
       textWidth + padding,
       textHeight + padding,
       10,
-      '#2d3855'
+      "#2d3855"
     );
     context.globalAlpha = 1;
 
     // background color
     context.font = font;
-    context.fillStyle = '#bac4e2';
+    context.fillStyle = "#bac4e2";
     context.fillText(message, 0 + 10, fontsize + 10);
 
     // canvas contents will be used for a texture

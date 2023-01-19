@@ -1,10 +1,9 @@
 import * as THREE from "three";
 
-import { IJointState } from "@formant/data-sdk";
+import { IJointState, ITransform } from "@formant/data-sdk";
 import URDFLoader, { URDFLink, URDFRobot } from "urdf-loader";
 import { Group, LoadingManager, Mesh, Scene } from "three";
 import { ColladaLoader } from "../../three-utils/loaders/ColladaLoader";
-import { ITransform } from "../../model/ITransform";
 import { transformMatrix } from "../math/transformMatrix";
 
 export interface ILoadedUrdf {
