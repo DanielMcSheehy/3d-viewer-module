@@ -1,6 +1,7 @@
 import { Chart, registerables } from "chart.js";
+import { INumericSetEntry } from "@formant/universe-core";
 import { Mesh, CanvasTexture, PlaneGeometry, MeshBasicMaterial } from "three";
-import { defined, INumericSetEntry, UniverseLayer } from "../main";
+import { defined, UniverseLayer } from "../main";
 
 export const colors = [
   "#2EC495",

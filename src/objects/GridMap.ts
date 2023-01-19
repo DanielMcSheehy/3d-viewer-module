@@ -11,12 +11,12 @@ import {
   PlaneGeometry,
   ShaderMaterial,
   Texture,
-} from 'three';
-import { defined } from '../../common/defined';
-import { fork } from '../../common/fork';
-import { Color } from '../../common/Color';
-import { transformMatrix } from '../math/transformMatrix';
-import { IGridMap } from '../main';
+} from "three";
+import { IGridMap } from "@formant/universe-core";
+import { defined } from "../../common/defined";
+import { fork } from "../../common/fork";
+import { Color } from "../../common/Color";
+import { transformMatrix } from "../math/transformMatrix";
 
 export class GridMap extends Group {
   public onLoad?: () => void;
@@ -34,8 +34,8 @@ export class GridMap extends Group {
   constructor() {
     super();
 
-    const mappedColor = defined(Color.fromString('#3b4668'));
-    const occupiedColor = defined(Color.fromString('#657197'));
+    const mappedColor = defined(Color.fromString("#3b4668"));
+    const occupiedColor = defined(Color.fromString("#657197"));
 
     const glColor = (c: Color) =>
       `vec3(${c.r.toFixed(1)}/255.0, ${c.g.toFixed(1)}/255.0, ${c.b.toFixed(

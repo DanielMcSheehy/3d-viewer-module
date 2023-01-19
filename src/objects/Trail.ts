@@ -1,9 +1,9 @@
-import { Group, Vector2 } from 'three';
-import { Line2 } from '../../three-utils/lines/Line2';
-import { LineGeometry } from '../../three-utils/lines/LineGeometry';
-import { LineMaterial } from '../../three-utils/lines/LineMaterial';
-import { IVector3 } from '../../data-sdk/src/model/IVector3';
-import { Color } from '../../common/Color';
+import { IVector3 } from "@formant/data-sdk";
+import { Group, Vector2 } from "three";
+import { Line2 } from "../../three-utils/lines/Line2";
+import { LineGeometry } from "../../three-utils/lines/LineGeometry";
+import { LineMaterial } from "../../three-utils/lines/LineMaterial";
+import { Color } from "../../common/Color";
 
 export class Trail extends Group {
   private material = new LineMaterial({
@@ -24,7 +24,7 @@ export class Trail extends Group {
       const { r, g, b } = color;
       this.material.color.setRGB(r / 255, g / 255, b / 255);
     }
-    Object.defineProperty(this, 'renderOrder', {
+    Object.defineProperty(this, "renderOrder", {
       get() {
         if (this.line) {
           return this.line.renderOrder;
@@ -42,7 +42,7 @@ export class Trail extends Group {
   public set vertices(vertices: IVector3[]) {
     const geometry = new LineGeometry();
     this.material.uniforms.opacity.value = 0.5;
-    this.material.defines.USE_DASH = '';
+    this.material.defines.USE_DASH = "";
     if (vertices.length > 1) {
       if (!this.line) {
         this.line = new Line2(geometry, this.material);

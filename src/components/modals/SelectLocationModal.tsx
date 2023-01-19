@@ -1,9 +1,9 @@
 import * as React from "react";
 import { useEffect } from "react";
+import { ILocation } from "@formant/data-sdk";
 import { TextField, DialogContentText, Stack, Select } from "@formant/ui-sdk";
 import { IUniverseData } from "@formant/universe-core";
 import { Modal } from "./Modal";
-import { ILocation } from "../../../data-sdk/src/model/ILocation";
 import { fork } from "../../../common/fork";
 
 interface ISelectLocationModalProps {

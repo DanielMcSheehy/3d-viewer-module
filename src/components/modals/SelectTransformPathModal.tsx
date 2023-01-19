@@ -1,8 +1,8 @@
 import * as React from "react";
+import { ITransformNode } from "@formant/data-sdk";
 import { useEffect } from "react";
 import { DialogContentText, Select } from "@formant/ui-sdk";
 import { IUniverseData } from "@formant/universe-core";
-import { ITransformNode } from "../../../data-sdk/src/model/ITransformNode";
 import { defined } from "../../../common/defined";
 import { TreeElement, TreePath } from "../../model/ITreeElement";
 import { SortableTree } from "../SortableTree";

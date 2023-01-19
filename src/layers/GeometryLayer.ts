@@ -11,21 +11,20 @@ import {
   SpriteMaterial,
   Texture,
   Vector3,
-} from 'three';
-import { IUniverseData } from '@formant/universe-core';
-import * as uuid from 'uuid';
-import { defined, definedAndNotNull } from '../../common/defined';
-import { IMarker3DArray } from '../../data-sdk/src/model/IMarker3DArray';
-import { GeometryWorld } from '../objects/GeometryWorld';
-import { LayerSuggestion } from './LayerRegistry';
-import { UniverseLayer } from './UniverseLayer';
+} from "three";
+import { IUniverseData, IMarker3DArray } from "@formant/universe-core";
+import * as uuid from "uuid";
+import { defined, definedAndNotNull } from "../../common/defined";
+import { GeometryWorld } from "../objects/GeometryWorld";
+import { LayerSuggestion } from "./LayerRegistry";
+import { UniverseLayer } from "./UniverseLayer";
 
 export class GeometryLayer extends UniverseLayer {
-  static layerTypeId: string = 'geometry';
+  static layerTypeId: string = "geometry";
 
-  static commonName = 'Geometry';
+  static commonName = "Geometry";
 
-  static description = 'Geometry driven from a ROS stream.';
+  static description = "Geometry driven from a ROS stream.";
 
   static usesData = true;
 
@@ -37,12 +36,12 @@ export class GeometryLayer extends UniverseLayer {
     if (deviceContext) {
       (await universeData.getTeleopRosStreams(deviceContext)).forEach(
         (stream) => {
-          if (stream.topicType === 'visualization_msgs/MarkerArray') {
+          if (stream.topicType === "visualization_msgs/MarkerArray") {
             dataLayers.push({
               sources: [
                 {
                   id: uuid.v4(),
-                  sourceType: 'realtime',
+                  sourceType: "realtime",
                   rosTopicName: stream.topicName,
                   rosTopicType: stream.topicType,
                 },
@@ -66,8 +65,8 @@ export class GeometryLayer extends UniverseLayer {
       defined(this.getLayerContext()).deviceId,
       defined(dataSource),
       (d) => {
-        if (typeof d === 'symbol') {
-          throw new Error('unhandled data status');
+        if (typeof d === "symbol") {
+          throw new Error("unhandled data status");
         }
         this.onData(d as IMarker3DArray);
       }
@@ -81,7 +80,7 @@ export class GeometryLayer extends UniverseLayer {
     geometry.forEach((g) => {
       if (g.dirty) {
         const mesh = this.worldGeometry.get(g.id);
-        if (g.type === 'line_list') {
+        if (g.type === "line_list") {
           if (!mesh) {
             const material = new LineBasicMaterial({
               color: new Color(g.color.r, g.color.g, g.color.b),
@@ -108,14 +107,14 @@ export class GeometryLayer extends UniverseLayer {
               opacity: g.color.a,
             });
           }
-        } else if (g.type === 'text') {
-          const fontface = 'Arial';
+        } else if (g.type === "text") {
+          const fontface = "Arial";
           const fontsize = 30;
           const message = g.text;
           const font = `${fontsize}px ${fontface}`;
 
-          const canvas = document.createElement('canvas');
-          const context = definedAndNotNull(canvas.getContext('2d'));
+          const canvas = document.createElement("canvas");
+          const context = definedAndNotNull(canvas.getContext("2d"));
 
           // get size data (height depends only on font size)
           context.font = font;
@@ -124,12 +123,12 @@ export class GeometryLayer extends UniverseLayer {
           const textHeight = fontsize;
           canvas.width = textWidth;
           canvas.height = textHeight;
-          context.fillStyle = '#2d3855';
+          context.fillStyle = "#2d3855";
           context.fillRect(0, 0, textWidth, textHeight);
 
           // background color
           context.font = font;
-          context.fillStyle = '#bac4e2';
+          context.fillStyle = "#bac4e2";
           context.fillText(message, 0, fontsize);
 
           // canvas contents will be used for a texture
@@ -155,10 +154,10 @@ export class GeometryLayer extends UniverseLayer {
           } else {
             mesh.material = spriteMaterial;
           }
-        } else if (g.type === 'sphere' || g.type === 'cube') {
+        } else if (g.type === "sphere" || g.type === "cube") {
           if (!mesh) {
             const meshGeometry =
-              g.type === 'sphere'
+              g.type === "sphere"
                 ? new SphereGeometry(1, 32, 16)
                 : new BoxGeometry(1, 1, 1);
             const material = new MeshBasicMaterial({
@@ -181,7 +180,7 @@ export class GeometryLayer extends UniverseLayer {
               opacity: g.color.a,
             });
           }
-        } else if (g.type === 'arrow') {
+        } else if (g.type === "arrow") {
           if (!mesh) {
             const material = new LineBasicMaterial({
               color: new Color(g.color.r, g.color.g, g.color.b),

@@ -1,19 +1,19 @@
-import { Vector2 } from 'three';
-import * as uuid from 'uuid';
-import { IUniverseData } from '@formant/universe-core';
-import { defined } from '../../common/defined';
-import { ITransformNode } from '../../data-sdk/src/model/ITransformNode';
-import { TransformTree } from '../objects/TransformTree';
-import { ITransformTreeNode } from '../objects/transformTreeLoader';
-import { LayerSuggestion } from './LayerRegistry';
-import { UniverseLayer } from './UniverseLayer';
+import { ITransformNode } from "@formant/data-sdk";
+import { Vector2 } from "three";
+import * as uuid from "uuid";
+import { IUniverseData } from "@formant/universe-core";
+import { defined } from "../../common/defined";
+import { TransformTree } from "../objects/TransformTree";
+import { ITransformTreeNode } from "../objects/transformTreeLoader";
+import { LayerSuggestion } from "./LayerRegistry";
+import { UniverseLayer } from "./UniverseLayer";
 
 export class DeviceVisualTFLayer extends UniverseLayer {
-  static layerTypeId: string = 'device_visual_tf';
+  static layerTypeId: string = "device_visual_tf";
 
-  static commonName = 'Transform Tree';
+  static commonName = "Transform Tree";
 
-  static description = 'A transform tree to represent a robot.';
+  static description = "A transform tree to represent a robot.";
 
   static usesData = true;
 
@@ -32,15 +32,15 @@ export class DeviceVisualTFLayer extends UniverseLayer {
             (await universeData.getTelemetryStreamType(
               deviceContext,
               stream.name
-            )) === 'transform tree'
+            )) === "transform tree"
           ) {
             suggestions.push({
               sources: [
                 {
                   id: uuid.v4(),
-                  sourceType: 'telemetry',
+                  sourceType: "telemetry",
                   streamName: stream.name,
-                  streamType: 'transform tree',
+                  streamType: "transform tree",
                 },
               ],
               layerType: DeviceVisualTFLayer.layerTypeId,
@@ -62,7 +62,7 @@ export class DeviceVisualTFLayer extends UniverseLayer {
       defined(this.getLayerContext()).deviceId,
       defined(dataSource),
       (d) => {
-        if (typeof d === 'symbol') {
+        if (typeof d === "symbol") {
           this.onTransformTreeData({});
         } else {
           this.onTransformTreeData(d as ITransformNode);

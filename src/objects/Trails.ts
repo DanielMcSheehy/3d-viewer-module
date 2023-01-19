@@ -1,24 +1,24 @@
-import { Group, Vector2 } from 'three';
-import { IVector3 } from '../../data-sdk/src/model/IVector3';
-import { Trail } from './Trail';
-import { Color } from '../../common/Color';
-import { defined } from '../../common/defined';
+import { Group, Vector2 } from "three";
+import { IVector3 } from "@formant/data-sdk";
+import { Trail } from "./Trail";
+import { Color } from "../../common/Color";
+import { defined } from "../../common/defined";
 
 export const colors = [
-  '#20a0ff', // royal-blue
-  '#ea719d', // red
-  '#795bce', // red-dark
-  '#f89973', // orange
-  '#f9c36e', // yellow
-  '#2ec495', // green
-  '#64d7d4', // mint
-  '#9a8261', // yellow-dark
-  '#94645f', // orange-dark
-  '#7f5072', // red-dark
-  '#564a94', // purple-dark
-  '#256faf', // royal-blue-dark
-  '#4a8d98', // mint-dark
-  '#2d8376', // green-dark
+  "#20a0ff", // royal-blue
+  "#ea719d", // red
+  "#795bce", // red-dark
+  "#f89973", // orange
+  "#f9c36e", // yellow
+  "#2ec495", // green
+  "#64d7d4", // mint
+  "#9a8261", // yellow-dark
+  "#94645f", // orange-dark
+  "#7f5072", // red-dark
+  "#564a94", // purple-dark
+  "#256faf", // royal-blue-dark
+  "#4a8d98", // mint-dark
+  "#2d8376", // green-dark
 ].map((_) => defined(Color.fromString(_)));
 
 export class Trails extends Group {

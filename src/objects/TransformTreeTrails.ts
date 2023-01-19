@@ -1,9 +1,9 @@
-import { Group, Vector2 } from 'three';
-import { IVector3 } from '../../data-sdk/src/model/IVector3';
-import { transformMatrix } from '../math/transformMatrix';
-import { ITransformTreeNode } from './transformTreeLoader';
-import { vector } from '../math/vector';
-import { Trails } from './Trails';
+import { Group, Vector2 } from "three";
+import { IVector3 } from "@formant/data-sdk";
+import { transformMatrix } from "../math/transformMatrix";
+import { ITransformTreeNode } from "./transformTreeLoader";
+import { vector } from "../math/vector";
+import { Trails } from "./Trails";
 
 function calculateEnds(node: ITransformTreeNode): { [name: string]: IVector3 } {
   const { name, transform, children } = node;

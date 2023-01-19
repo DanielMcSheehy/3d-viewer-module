@@ -1,6 +1,6 @@
-import * as uuid from 'uuid';
-import { getDistance } from 'geolib';
-import { ILocation, IUniverseData } from '@formant/universe-core';
+import * as uuid from "uuid";
+import { getDistance } from "geolib";
+import { ILocation, IUniverseData, IOdometry } from "@formant/universe-core";
 import {
   Euler,
   Matrix4,
@@ -8,21 +8,20 @@ import {
   PerspectiveCamera,
   Quaternion,
   Vector3,
-} from 'three';
-import { defined } from '../../common/defined';
-import { ITransformNode } from '../../model/ITransformNode';
-import { Positioning } from '../model/SceneGraph';
-import { TreePath } from '../model/ITreeElement';
+} from "three";
+import { defined } from "../../common/defined";
+import { ITransformNode } from "../../model/ITransformNode";
+import { Positioning } from "../model/SceneGraph";
+import { TreePath } from "../model/ITreeElement";
 
-import { UniverseLayer } from './UniverseLayer';
-import { IOdometry } from '../main';
+import { UniverseLayer } from "./UniverseLayer";
 
 export class TransformLayer extends Object3D {
-  static layerTypeId: string = 'transform';
+  static layerTypeId: string = "transform";
 
-  static commonName = 'Empty';
+  static commonName = "Empty";
 
-  static description = 'An empty layer to fit other layers in.';
+  static description = "An empty layer to fit other layers in.";
 
   static usesData = false;
 
@@ -103,7 +102,7 @@ export class TransformLayer extends Object3D {
     }
 
     if (
-      positioning.type === 'gps' &&
+      positioning.type === "gps" &&
       positioning.stream &&
       positioning.relativeToLongitude !== undefined &&
       positioning.relativeToLatitude !== undefined
@@ -112,13 +111,13 @@ export class TransformLayer extends Object3D {
         defined(deviceId),
         {
           id: uuid.v4(),
-          sourceType: 'telemetry',
+          sourceType: "telemetry",
           streamName: positioning.stream,
-          streamType: 'location',
+          streamType: "location",
         },
         (d) => {
-          if (typeof d === 'symbol') {
-            throw new Error('unhandled data status');
+          if (typeof d === "symbol") {
+            throw new Error("unhandled data status");
           }
           const location = d as ILocation;
           const h1 = {
@@ -162,7 +161,7 @@ export class TransformLayer extends Object3D {
         }
       );
     } else if (
-      positioning.type === 'transform tree' &&
+      positioning.type === "transform tree" &&
       positioning.stream &&
       positioning.end
     ) {
@@ -170,13 +169,13 @@ export class TransformLayer extends Object3D {
         defined(deviceId),
         {
           id: uuid.v4(),
-          sourceType: 'telemetry',
+          sourceType: "telemetry",
           streamName: positioning.stream,
-          streamType: 'transform tree',
+          streamType: "transform tree",
         },
         (d) => {
-          if (typeof d === 'symbol') {
-            throw new Error('unhandled data status');
+          if (typeof d === "symbol") {
+            throw new Error("unhandled data status");
           }
           const transformTree = d as ITransformNode;
           fetch(defined(transformTree.url))
@@ -207,18 +206,18 @@ export class TransformLayer extends Object3D {
             });
         }
       );
-    } else if (positioning.type === 'localization' && positioning.stream) {
+    } else if (positioning.type === "localization" && positioning.stream) {
       this.positionUnsubsciber = universeData.subscribeToOdometry(
         defined(deviceId),
         {
           id: uuid.v4(),
-          sourceType: 'telemetry',
+          sourceType: "telemetry",
           streamName: positioning.stream,
-          streamType: 'localization',
+          streamType: "localization",
         },
         (d) => {
-          if (typeof d === 'symbol') {
-            throw new Error('unhandled data status');
+          if (typeof d === "symbol") {
+            throw new Error("unhandled data status");
           }
           const odom = d as IOdometry;
           const pos = odom.pose.translation;
@@ -229,18 +228,18 @@ export class TransformLayer extends Object3D {
           );
         }
       );
-    } else if (positioning.type === 'localization' && positioning.rtcStream) {
+    } else if (positioning.type === "localization" && positioning.rtcStream) {
       this.positionUnsubsciber = universeData.subscribeToOdometry(
         defined(deviceId),
         {
           id: uuid.v4(),
-          sourceType: 'realtime',
+          sourceType: "realtime",
           rosTopicName: positioning.rtcStream,
-          rosTopicType: 'json',
+          rosTopicType: "json",
         },
         (d) => {
-          if (typeof d === 'symbol') {
-            throw new Error('unhandled data status');
+          if (typeof d === "symbol") {
+            throw new Error("unhandled data status");
           }
           const odom = d as IOdometry;
           const pos = odom.pose.translation;
@@ -251,9 +250,9 @@ export class TransformLayer extends Object3D {
           );
         }
       );
-    } else if (positioning.type === 'manual') {
+    } else if (positioning.type === "manual") {
       this.position.set(positioning.x, positioning.y, positioning.z);
-    } else if (positioning.type === 'hud') {
+    } else if (positioning.type === "hud") {
       this.position.set(positioning.x, positioning.y, 0);
       const camera = defined(this.camera)();
       const offset = new Object3D();

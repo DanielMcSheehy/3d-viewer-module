@@ -1,4 +1,4 @@
-import { ITransform } from '../../data-sdk/src/model/ITransform';
+import { ITransform } from "@formant/data-sdk";
 
 export interface ITransformTreeNode {
   name: string;
@@ -7,6 +7,6 @@ export interface ITransformTreeNode {
 }
 
 export async function load(path: string): Promise<ITransformTreeNode> {
-  const response = await fetch(path, { mode: 'cors' });
+  const response = await fetch(path, { mode: "cors" });
   return response.json();
 }

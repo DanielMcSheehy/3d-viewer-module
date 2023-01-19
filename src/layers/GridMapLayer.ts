@@ -1,18 +1,17 @@
-import * as uuid from 'uuid';
-import { IUniverseData } from '@formant/universe-core';
-import { defined } from '../../common/defined';
-import { IGridMap } from '../main';
-import { GridMap } from '../objects/GridMap';
-import { LayerSuggestion } from './LayerRegistry';
-import { UniverseLayer } from './UniverseLayer';
+import * as uuid from "uuid";
+import { IUniverseData, IGridMap } from "@formant/universe-core";
+import { defined } from "../../common/defined";
+import { GridMap } from "../objects/GridMap";
+import { LayerSuggestion } from "./LayerRegistry";
+import { UniverseLayer } from "./UniverseLayer";
 
 export class GridMapLayer extends UniverseLayer {
-  static layerTypeId: string = 'grid_map';
+  static layerTypeId: string = "grid_map";
 
-  static commonName = 'Grid Map';
+  static commonName = "Grid Map";
 
   static description =
-    'A grid map to represent a set of locations and data intensity.';
+    "A grid map to represent a set of locations and data intensity.";
 
   static usesData = true;
 
@@ -28,16 +27,16 @@ export class GridMapLayer extends UniverseLayer {
             return;
           }
           if (
-            stream.configuration.type === 'ros-localization' &&
+            stream.configuration.type === "ros-localization" &&
             stream.configuration.mapTopic
           ) {
             dataLayers.push({
               sources: [
                 {
                   id: uuid.v4(),
-                  sourceType: 'telemetry',
+                  sourceType: "telemetry",
                   streamName: stream.name,
-                  streamType: 'localization',
+                  streamType: "localization",
                 },
               ],
               layerType: GridMapLayer.layerTypeId,
@@ -57,8 +56,8 @@ export class GridMapLayer extends UniverseLayer {
       defined(this.getLayerContext()).deviceId,
       defined(dataSource),
       (d) => {
-        if (typeof d === 'symbol') {
-          throw new Error('unhandled data status');
+        if (typeof d === "symbol") {
+          throw new Error("unhandled data status");
         }
         this.onData(d as IGridMap);
       }

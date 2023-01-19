@@ -1,11 +1,11 @@
-import * as THREE from 'three';
+import * as THREE from "three";
 
-import URDFLoader, { URDFLink, URDFRobot } from 'urdf-loader';
-import { Group, LoadingManager, Mesh, Scene } from 'three';
-import { ColladaLoader } from '../../three-utils/loaders/ColladaLoader';
-import { IJointState } from '../../data-sdk/src/model/IJointState';
-import { ITransform } from '../../model/ITransform';
-import { transformMatrix } from '../math/transformMatrix';
+import { IJointState } from "@formant/data-sdk";
+import URDFLoader, { URDFLink, URDFRobot } from "urdf-loader";
+import { Group, LoadingManager, Mesh, Scene } from "three";
+import { ColladaLoader } from "../../three-utils/loaders/ColladaLoader";
+import { ITransform } from "../../model/ITransform";
+import { transformMatrix } from "../math/transformMatrix";
 
 export interface ILoadedUrdf {
   url: string;
@@ -26,7 +26,7 @@ export class Urdf extends Group {
 
   private transparent = false;
 
-  private color = new THREE.Color('white');
+  private color = new THREE.Color("white");
 
   // eslint-disable-next-line no-use-before-define
   static urdfMap: { [configJson: string]: Urdf } = {};
@@ -58,12 +58,12 @@ export class Urdf extends Group {
     const manager = new LoadingManager();
     const loader = new URDFLoader(manager);
     if (this.configuration?.ghosted) {
-      this.color = new THREE.Color('lightgrey');
+      this.color = new THREE.Color("lightgrey");
       this.opacity = 0.25;
       this.transparent = true;
     }
     if (this.configuration?.endEffectorOnly) {
-      this.color = new THREE.Color('green');
+      this.color = new THREE.Color("green");
       this.opacity = 0.005;
       this.transparent = true;
     }
@@ -78,7 +78,7 @@ export class Urdf extends Group {
       const daeLoader = new ColladaLoader(loadingManager);
       daeLoader.load(path, (dae) => {
         dae.scene.children = dae.scene.children.filter(
-          (_) => !_.type.endsWith('Light')
+          (_) => !_.type.endsWith("Light")
         );
         dae.scene.traverse((_) => {
           if (_ instanceof Mesh) {
@@ -127,7 +127,7 @@ export class Urdf extends Group {
         this.add(endEffector);
       } else {
         console.warn(
-          'URDF configured for endEffectorOnly but endEffectorLink not provided'
+          "URDF configured for endEffectorOnly but endEffectorLink not provided"
         );
       }
     } else {

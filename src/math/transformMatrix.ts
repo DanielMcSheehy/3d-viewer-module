@@ -1,7 +1,7 @@
-import { Matrix4 } from 'three';
-import { ITransform } from '../../data-sdk/src/model/ITransform';
-import { quaternion } from './quaternion';
-import { vector } from './vector';
+import { Matrix4 } from "three";
+import { ITransform } from "@formant/data-sdk";
+import { quaternion } from "./quaternion";
+import { vector } from "./vector";
 
 export function transformMatrix({
   translation,

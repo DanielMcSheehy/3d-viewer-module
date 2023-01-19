@@ -1,7 +1,5 @@
-import { IColorRGBA } from '../../data-sdk/src/model/IColorRGBA';
-import { IMarker3DArray } from '../../data-sdk/src/model/IMarker3DArray';
-import { IQuaternion } from '../../data-sdk/src/model/IQuaternion';
-import { IVector3 } from '../../data-sdk/src/model/IVector3';
+import { IQuaternion, IVector3, IColorRGBA } from "@formant/data-sdk";
+import { IMarker3DArray } from "@formant/universe-core";
 
 export type BaseGeometry = {
   id: string;
@@ -13,25 +11,25 @@ export type BaseGeometry = {
 };
 
 export type LineList = BaseGeometry & {
-  type: 'line_list';
+  type: "line_list";
   points: IVector3[];
 };
 
 export type Arrow = BaseGeometry & {
-  type: 'arrow';
+  type: "arrow";
   points: IVector3[];
 };
 
 export type Cube = BaseGeometry & {
-  type: 'cube';
+  type: "cube";
 };
 
 export type Sphere = BaseGeometry & {
-  type: 'sphere';
+  type: "sphere";
 };
 
 export type Text = BaseGeometry & {
-  type: 'text';
+  type: "text";
   text: string;
 };
 
@@ -89,7 +87,7 @@ export class GeometryWorld {
         ns = new Map();
         this.geometry.set(marker.ns, ns);
       }
-      if (marker.action === 'delete_all') {
+      if (marker.action === "delete_all") {
         this.geometry = new Map();
       } else {
         if (marker.id === undefined) {
@@ -105,8 +103,8 @@ export class GeometryWorld {
           });
         }
 
-        if (marker.type === 'line_list') {
-          if (marker.action === 'add' || marker.action === 'modify') {
+        if (marker.type === "line_list") {
+          if (marker.action === "add" || marker.action === "modify") {
             ns.set(marker.id, {
               id: `${marker.ns}_${marker.id}`,
               type: marker.type,
@@ -117,11 +115,11 @@ export class GeometryWorld {
               points: marker.points,
               dirty: true,
             });
-          } else if (marker.action === 'delete') {
+          } else if (marker.action === "delete") {
             ns.delete(marker.id);
           }
-        } else if (marker.type === 'sphere' || marker.type === 'cube') {
-          if (marker.action === 'add' || marker.action === 'modify') {
+        } else if (marker.type === "sphere" || marker.type === "cube") {
+          if (marker.action === "add" || marker.action === "modify") {
             ns.set(marker.id, {
               id: `${marker.ns}_${marker.id}`,
               type: marker.type,
@@ -131,11 +129,11 @@ export class GeometryWorld {
               color: marker.color,
               dirty: true,
             });
-          } else if (marker.action === 'delete') {
+          } else if (marker.action === "delete") {
             ns.delete(marker.id);
           }
-        } else if (marker.type === 'arrow') {
-          if (marker.action === 'add' || marker.action === 'modify') {
+        } else if (marker.type === "arrow") {
+          if (marker.action === "add" || marker.action === "modify") {
             ns.set(marker.id, {
               id: `${marker.ns}_${marker.id}`,
               type: marker.type,
@@ -146,22 +144,22 @@ export class GeometryWorld {
               points: marker.points,
               dirty: true,
             });
-          } else if (marker.action === 'delete') {
+          } else if (marker.action === "delete") {
             ns.delete(marker.id);
           }
-        } else if (marker.type === 'text_view_facing') {
-          if (marker.action === 'add' || marker.action === 'modify') {
+        } else if (marker.type === "text_view_facing") {
+          if (marker.action === "add" || marker.action === "modify") {
             ns.set(marker.id, {
               id: `${marker.ns}_${marker.id}`,
-              type: 'text',
+              type: "text",
               position: marker.pose.translation,
               rotation: marker.pose.rotation,
               scale: marker.scale,
               color: marker.color,
-              text: marker.text || '',
+              text: marker.text || "",
               dirty: true,
             });
-          } else if (marker.action === 'delete') {
+          } else if (marker.action === "delete") {
             ns.delete(marker.id);
           }
         }
