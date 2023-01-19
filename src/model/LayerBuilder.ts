@@ -69,7 +69,45 @@ export class LayerBuilder {
       dataSources: geometryLayerConfig.dataSources,
     };
   }
-  /*
+
+  static map(
+    mapLayerConfig: {
+      positioning?: Positioning;
+      dataSources?: UniverseDataSource[];
+      longitude?: number;
+      latitude?: number;
+      size?: number;
+    } = {
+      positioning: PositioningBuilder.fixed(0, 0, 0),
+      dataSources: [],
+    }
+  ): SceneGraphElement {
+    return {
+      id: uuid.v4(),
+      editing: false,
+      type: "map",
+      name: "Map",
+      children: [],
+      visible: true,
+      fieldValues: {
+        longitude: {
+          type: "number",
+          value: mapLayerConfig.longitude || 0,
+        },
+        latitude: {
+          type: "number",
+          value: mapLayerConfig.latitude || 0,
+        },
+        size: {
+          type: "number",
+          value: mapLayerConfig.size || 0,
+        },
+      },
+      position: mapLayerConfig.positioning || PositioningBuilder.fixed(0, 0, 0),
+      data: {},
+      dataSources: mapLayerConfig.dataSources,
+    };
+  } /*
 
   addUrdf(
     urdfLayerConfig: {
