@@ -1,14 +1,12 @@
 import * as uuid from "uuid";
 import { UniverseDataSource } from "@formant/universe-core";
 import { PositioningBuilder } from "./PositioningBuilder";
-import { Positioning, SceneGraph, SceneGraphElement } from "./SceneGraph";
-import { LayerRegistry } from "../layers/LayerRegistry";
-import { UniverseLayer } from "../layers/UniverseLayer";
+import { Positioning, SceneGraphElement } from "./SceneGraph";
 
-export class SceneBuilder {
+export class LayerBuilder {
   static ground(
     groundLayerConfig: {
-      positioning: Positioning;
+      positioning?: Positioning;
       flat: boolean;
     } = { positioning: PositioningBuilder.fixed(0, 0, 0), flat: true }
   ): SceneGraphElement {
@@ -19,7 +17,8 @@ export class SceneBuilder {
       name: "Ground",
       children: [],
       visible: true,
-      position: groundLayerConfig.positioning,
+      position:
+        groundLayerConfig.positioning || PositioningBuilder.fixed(0, 0, 0),
       fieldValues: {
         flatAxes: {
           type: "boolean",
@@ -32,7 +31,7 @@ export class SceneBuilder {
 
   static deviceMarker(
     dotLayerConfig: {
-      positioning: Positioning;
+      positioning?: Positioning;
       dataSources?: UniverseDataSource[];
     } = { positioning: PositioningBuilder.fixed(0, 0, 0), dataSources: [] }
   ): SceneGraphElement {
@@ -43,10 +42,31 @@ export class SceneBuilder {
       name: "Dot",
       children: [],
       visible: true,
-      position: dotLayerConfig.positioning,
+      position: dotLayerConfig.positioning || PositioningBuilder.fixed(0, 0, 0),
       fieldValues: {},
       data: {},
       dataSources: dotLayerConfig.dataSources,
+    };
+  }
+
+  static geometry(
+    geometryLayerConfig: {
+      positioning?: Positioning;
+      dataSources: UniverseDataSource[];
+    } = { positioning: PositioningBuilder.fixed(0, 0, 0), dataSources: [] }
+  ): SceneGraphElement {
+    return {
+      id: uuid.v4(),
+      editing: false,
+      type: "geometry",
+      name: "Geometry",
+      children: [],
+      visible: true,
+      position:
+        geometryLayerConfig.positioning || PositioningBuilder.fixed(0, 0, 0),
+      fieldValues: {},
+      data: {},
+      dataSources: geometryLayerConfig.dataSources,
     };
   }
   /*

@@ -34,8 +34,9 @@ export * from "./components/viewer/HandheldController";
 export * from "./formantColor";
 export * from "./oculusQuest";
 export * from "./model/PositioningBuilder";
-export * from "./model/SceneGraphBuilder";
+export * from "./model/LayerBuilder";
 export * from "./createUniverse";
+export * from "./model/DataSourceBuilder";
 
 export { defined, definedAndNotNull } from "./common/defined";
 
