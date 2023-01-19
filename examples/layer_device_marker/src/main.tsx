@@ -13,8 +13,6 @@ builder.addDeviceMarker({ positioning: PositioningBuilder.fixed(2, -2, 0) });
 builder.addDeviceMarker({ positioning: PositioningBuilder.fixed(0, 2, 0) });
 const scene = builder.build();
 
-console.log(scene);
-
 createUniverse(
   definedAndNotNull(document.querySelector("#app")),
   new ExampleUniverseData(),
