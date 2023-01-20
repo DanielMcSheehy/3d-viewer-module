@@ -1,37 +1,46 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "type": "object",
-  "properties": {
-    "baseStationLocationStream": {
-      "type": "string"
-    },
-    "mapSize": {
-      "type": "number"
-    },
-    "mapVisibility": {
-      "type": "boolean"
-    },
-    "devices": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "deviceId": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          },
-          "odometryStream": {
-            "type": "string"
-          },
-          "deviceVisibility": {
-            "type": "boolean"
-          }
-        },
-        "required": ["deviceId", "odometryStream"]
-      }
-    }
-  },
-  "required": ["baseStationLocationStream", "mapSize"]
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"title": "3D Viewer Configuration",
+	"description": "Configuration for all capabilities of the 3D Viwer module.",
+	"type": "object",
+	"properties": {
+		"baseStationLocationStream": {
+			"description": "The stream that specifies location metadata.",
+			"type": "string"
+		},
+		"mapSize": {
+			"description": "A number that specifies the size of the map.",
+			"type": "number"
+		},
+		"mapVisibility": {
+			"type": "boolean"
+		},
+		"devices": {
+			"type": "array",
+			"description": "A list of devices that are enabled for the 3D viewer. ",
+			"items": {
+				"type": "object",
+				"properties": {
+					"deviceId": {
+						"type": "string",
+						"description": "A unique Id for a device."
+					},
+					"name": {
+						"description": "Name of the device.",
+						"type": "string"
+					},
+					"odometryStream": {
+						"description": "Name of the stream that provides odometry metadata.",
+						"type": "string"
+					},
+					"deviceVisibility": {
+						"description": "Toggles whether this device is visible or not.",
+						"type": "boolean"
+					}
+				},
+				"required": ["deviceId", "odometryStream"]
+			}
+		}
+	},
+	"required": ["baseStationLocationStream", "mapSize"]
 }
